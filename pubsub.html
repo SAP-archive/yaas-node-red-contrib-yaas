@@ -14,7 +14,7 @@
         //align : "left",
         paletteLabel : 'pubsub',
         label: function() {
-            return this.name || (this.applicationId + '/' + this.topic);
+            return this.name ||  this.topic;
         }
     });
 </script>
@@ -61,7 +61,7 @@
         align : "right",
         paletteLabel : 'pubsub',
         label: function() {
-            return this.name || (this.applicationId + '/' + this.topic);
+            return this.name || this.topic;
         }
     });
 </script>
