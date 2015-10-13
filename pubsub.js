@@ -24,7 +24,7 @@ module.exports = function(RED) {
 
             //start inteval polling
             node.intervalID = setInterval(function(){
-                node.log("Polling for event.");
+                node.log("Polling for " + node.yaasCredentials.application_id + '/' + node.topic);
                 pubsub.readNext(access_token, node.yaasCredentials.application_id, node.topic)
                 .then(function(evt){
                     if (evt != undefined)
@@ -64,9 +64,17 @@ module.exports = function(RED) {
         oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, [])
         .then(function(access_token) {
             node.access_token = access_token;
+
+            pubsub.createTopic(node.access_token, node.topic)
+            .then(function(createTopicBody){
+                if (createTopicBody.status != 409) {
+                    node.log("topic " + node.yaasCredentials.application_id + '/' + node.topic + " created.");
+                }
+            }, console.log);
+
             node.status({fill:"green",shape:"dot",text:"ready"});  
         }, console.log);     
-        
+       
         node.on("input",function(msg) {
 
             if (!node.access_token)
@@ -75,7 +83,7 @@ module.exports = function(RED) {
                 return;
             }
 
-            node.log('Publishing: ' + msg.payload);
+            node.log('Publishing ' + node.yaasCredentials.application_id + '/' + node.topic + ': ' + msg.payload);
 
             pubsub.publish(node.access_token, node.yaasCredentials.application_id, node.topic, msg.payload)
             .then(function(){
