@@ -4,16 +4,14 @@
         color: '#C7E9C0',
         defaults: {
             name: {value:""},
-            clientId: {value:"xLzhcgCy0cr8qVM7f8sM0nnO65NVxtc3", required:true},
-            clientSecret: {value:"RCFsqCPAvGE1MCdX", required:true},
-            applicationId: {value:"hybrislabs.photon", required:true},
+            yaasCredentials: {type:"yaas-credentials", required:true},
             topic : {value:"button_pressed", required:true},
             interval : {value:500, required:false}
         },
         inputs:0,
         outputs:1,
         icon: "labs.png",
-//        align : "left",
+        //align : "left",
         paletteLabel : 'pubsub',
         label: function() {
             return this.name || (this.applicationId + '/' + this.topic);
@@ -23,17 +21,13 @@
 
 <script type="text/x-red" data-template-name="subscribe">   
     <div class="form-row">
-        <label for="node-input-clientId"><i class="fa fa-user-secret"></i> Client ID</label>
-        <input type="text" id="node-input-clientId" placeholder="Client ID">
-    </div>    
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>      
     <div class="form-row">
-        <label for="node-input-clientSecret"><i class="fa fa-key"></i> Client Secret</label>
-        <input type="text" id="node-input-clientSecret" placeholder="Client Secret">
-    </div>
-    <div class="form-row">
-        <label for="node-input-applicationId"><i class="fa fa-cube"></i> Application ID</label>
-        <input type="text" id="node-input-applicationId" placeholder="Application ID">
-    </div>
+        <label for="node-input-yaasCredentials"><i class="fa"></i> Credentials</label>
+        <input type="text" id="node-input-yaasCredentials">
+    </div> 
     <div class="form-row">
         <label for="node-input-topic"><i class="fa fa-comments-o"></i> Topic</label>
         <input type="text" id="node-input-topic" placeholder="Topic">
@@ -42,10 +36,6 @@
         <label for="node-input-topic"><i class="fa fa-comments-o"></i> Interval</label>
         <input type="number" id="node-input-interval" placeholder="500">
     </div>      
-    <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
-    </div>                                  
 </script>
 <script type="text/x-red" data-help-name="subscribe">
     <p>
@@ -62,9 +52,7 @@
         color: '#C7E9C0',
         defaults: {
             name: {value:""},
-            clientId: {value:"xLzhcgCy0cr8qVM7f8sM0nnO65NVxtc3", required:true},
-            clientSecret: {value:"RCFsqCPAvGE1MCdX", required:true},
-            applicationId: {value:"hybrislabs.photon", required:true},
+            yaasCredentials: {type:"yaas-credentials", required:true},
             topic : {value:"button_pressed", required:true}
         },
         inputs:1,
@@ -80,25 +68,18 @@
 
 <script type="text/x-red" data-template-name="publish">   
     <div class="form-row">
-        <label for="node-input-clientId"><i class="fa fa-user-secret"></i> Client ID</label>
-        <input type="text" id="node-input-clientId" placeholder="Client ID">
-    </div>    
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>      
     <div class="form-row">
-        <label for="node-input-clientSecret"><i class="fa fa-key"></i> Client Secret</label>
-        <input type="text" id="node-input-clientSecret" placeholder="Client Secret">
-    </div>
-    <div class="form-row">
-        <label for="node-input-applicationId"><i class="fa fa-cube"></i> Application ID</label>
-        <input type="text" id="node-input-applicationId" placeholder="Application ID">
-    </div>
+        <label for="node-input-yaasCredentials"><i class="fa"></i> Credentials</label>
+        <input type="text" id="node-input-yaasCredentials">
+    </div> 
     <div class="form-row">
         <label for="node-input-topic"><i class="fa fa-comments-o"></i> Topic</label>
         <input type="text" id="node-input-topic" placeholder="Topic">
     </div>   
-    <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
-    </div>                                  
+                                
 </script>
 <script type="text/x-red" data-help-name="publish">
     <p>
