@@ -1,0 +1,50 @@
+<script type="text/javascript">
+    RED.nodes.registerType('subscribe',{
+        category: 'yaas',
+        color: '#C7E9C0',
+        defaults: {
+            client_id: {value:"", required:true},
+            client_secret: {value:"", required:true},
+            application_id: {value:"organization.application", required:true},
+            topic : {value:"button_pressed", required:true},
+            interval : {value:500, required:false}
+        },
+        inputs:0,
+        outputs:1,
+        icon: "labs.png",
+        align : "right",
+        paletteLabel : 'pubsub',
+        label: function() {
+            return this.name || (this.application_id + '/' + this.topic);
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="subscribe">   
+    <div class="form-row">
+        <label for="node-input-client_id"><i class="icon-tag"></i> Client ID</label>
+        <input type="text" id="node-input-client_id" placeholder="Client ID">
+    </div>    
+    <div class="form-row">
+        <label for="node-input-client_secret"><i class="icon-tag"></i> Client Secret</label>
+        <input type="text" id="node-input-client_secret" placeholder="Client Secret">
+    </div>
+    <div class="form-row">
+        <label for="node-input-application_id"><i class="icon-tag"></i> Application ID</label>
+        <input type="text" id="node-input-application_id" placeholder="Application ID">
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="icon-tag"></i> Topic</label>
+        <input type="text" id="node-input-topic" placeholder="Topic">
+    </div>   
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>                                  
+</script>
+
+<script type="text/x-red" data-help-name="subscribe">
+    <p>
+       Subscribe
+    </p>
+</script>
