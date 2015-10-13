@@ -1,0 +1,53 @@
+<script type="text/javascript">
+    RED.nodes.registerType('write',{
+        category: 'yaas',
+        color: '#C7E9C0',
+        defaults: {
+            name: {value: ""},
+            clientId: {value: "xLzhcgCy0cr8qVM7f8sM0nnO65NVxtc3", required: true},
+            clientSecret: {value: "RCFsqCPAvGE1MCdX", required: true},
+            applicationId: {value: "hybrislabs.photon", required: true},
+            tenantId: {value: "iotworkshop", required: true},
+            documentType : {value: "button", required: true}
+        },
+        inputs: 1,
+        outputs: 0,
+        icon: "labs.png",
+        paletteLabel: 'document',
+        label: function() {
+            return this.name || (this.applicationId + ' write ' + this.documentType + ' documents');
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="write">
+    <div class="form-row">
+        <label for="node-input-clientId"><i class="fa fa-user-secret"></i> Client ID</label>
+        <input type="text" id="node-input-clientId" placeholder="Client ID">
+    </div>    
+    <div class="form-row">
+        <label for="node-input-clientSecret"><i class="fa fa-key"></i> Client Secret</label>
+        <input type="text" id="node-input-clientSecret" placeholder="Client Secret">
+    </div>
+    <div class="form-row">
+        <label for="node-input-applicationId"><i class="fa fa-cube"></i> Application ID</label>
+        <input type="text" id="node-input-applicationId" placeholder="Application ID">
+    </div>
+    <div class="form-row">
+        <label for="node-input-tenantId"><i class="fa fa-comments-o"></i> Tenant ID</label>
+        <input type="text" id="node-input-tenantId" placeholder="Tenant ID">
+    </div>
+    <div class="form-row">
+        <label for="node-input-documentType"><i class="fa fa-comments-o"></i> Document Type</label>
+        <input type="number" id="node-input-documentType" placeholder="button">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+<script type="text/x-red" data-help-name="write">
+    <p>
+       Write
+    </p>
+</script>
