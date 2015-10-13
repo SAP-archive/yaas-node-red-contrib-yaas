@@ -24,7 +24,7 @@ module.exports = function(RED) {
 
             //start inteval polling
             node.intervalID = setInterval(function(){
-                node.log("Polling for " + node.application_id + '/' + node.topic);
+                node.log("Polling for " + node.yaasCredentials.application_id + '/' + node.topic);
                 pubsub.readNext(access_token, node.yaasCredentials.application_id, node.topic)
                 .then(function(evt){
                     if (evt != undefined)
@@ -68,7 +68,7 @@ module.exports = function(RED) {
             pubsub.createTopic(node.access_token, node.topic)
             .then(function(createTopicBody){
                 if (createTopicBody.status != 409) {
-                    node.log("topic " + node.application_id + '/' + node.topic + " created.");
+                    node.log("topic " + node.yaasCredentials.application_id + '/' + node.topic + " created.");
                 }
             }, console.log);
 
@@ -83,7 +83,7 @@ module.exports = function(RED) {
                 return;
             }
 
-            node.log('Publishing ' + node.application_id + '/' + node.topic + ': ' + msg.payload);
+            node.log('Publishing ' + node.yaasCredentials.application_id + '/' + node.topic + ': ' + msg.payload);
 
             pubsub.publish(node.access_token, node.yaasCredentials.application_id, node.topic, msg.payload)
             .then(function(){
