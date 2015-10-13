@@ -4,9 +4,9 @@
         color: '#C7E9C0',
         defaults: {
             name: {value:""},
-            client_id: {value:"xLzhcgCy0cr8qVM7f8sM0nnO65NVxtc3", required:true},
-            client_secret: {value:"RCFsqCPAvGE1MCdX", required:true},
-            application_id: {value:"hybrislabs.photon", required:true},
+            clientId: {value:"xLzhcgCy0cr8qVM7f8sM0nnO65NVxtc3", required:true},
+            clientSecret: {value:"RCFsqCPAvGE1MCdX", required:true},
+            applicationId: {value:"hybrislabs.photon", required:true},
             topic : {value:"button_pressed", required:true},
             interval : {value:500, required:false}
         },
@@ -16,23 +16,23 @@
         align : "right",
         paletteLabel : 'pubsub',
         label: function() {
-            return this.name || (this.application_id + '/' + this.topic);
+            return this.name || (this.applicationId + '/' + this.topic);
         }
     });
 </script>
 
 <script type="text/x-red" data-template-name="subscribe">   
     <div class="form-row">
-        <label for="node-input-client_id"><i class="fa fa-user-secret"></i> Client ID</label>
-        <input type="text" id="node-input-client_id" placeholder="Client ID">
+        <label for="node-input-clientId"><i class="fa fa-user-secret"></i> Client ID</label>
+        <input type="text" id="node-input-clientId" placeholder="Client ID">
     </div>    
     <div class="form-row">
-        <label for="node-input-client_secret"><i class="fa fa-key"></i> Client Secret</label>
-        <input type="text" id="node-input-client_secret" placeholder="Client Secret">
+        <label for="node-input-clientSecret"><i class="fa fa-key"></i> Client Secret</label>
+        <input type="text" id="node-input-clientSecret" placeholder="Client Secret">
     </div>
     <div class="form-row">
-        <label for="node-input-application_id"><i class="fa fa-cube"></i> Application ID</label>
-        <input type="text" id="node-input-application_id" placeholder="Application ID">
+        <label for="node-input-applicationId"><i class="fa fa-cube"></i> Application ID</label>
+        <input type="text" id="node-input-applicationId" placeholder="Application ID">
     </div>
     <div class="form-row">
         <label for="node-input-topic"><i class="fa fa-comments-o"></i> Topic</label>
