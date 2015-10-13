@@ -11,7 +11,6 @@ module.exports = function(RED) {
 
         node.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
 
-
         node.topic = config.topic;
         node.interval = config.interval;
 
