@@ -1,6 +1,7 @@
 module.exports = function(RED) {
    
     var request = require("request");
+    var oauth2 = require('./lib/oauth2.js');
  
 
     function YaasPubsubSubscribeNode(config) {
@@ -14,18 +15,19 @@ module.exports = function(RED) {
         node.interval = config.interval;
 
         node.status({fill:"red",shape:"ring",text:"disconnected"});
-
-
-        //get oauth2 access token
-        node.status({fill:"green",shape:"dot",text:"connected"});
-
-
-        //start inteval polling
-        node.intervalID = setInterval(function(){
-            var msg = {payload:"apfelkuchen"};
-            node.send(msg);
-        }, node.interval);
         
+        //get oauth2 access token
+        oauth2.getClientCredentialsToken(node.client_id, node.client_secret, [])
+        .then(function(access_token) {
+            node.status({fill:"green",shape:"dot",text:"connected"});  
+
+            //start inteval polling
+            node.intervalID = setInterval(function(){
+                var msg = {payload:access_token};
+                node.send(msg);
+            }, node.interval);            
+
+        }, console.log);        
 
         node.on('close', function() {
             if (node.intervalID) {
