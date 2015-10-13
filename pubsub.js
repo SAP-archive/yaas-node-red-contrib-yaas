@@ -2,15 +2,16 @@ module.exports = function(RED) {
    
     var request = require("request");
     var oauth2 = require('./lib/oauth2.js');
+    var pubsub = require('./lib/pubsub.js');
  
 
     function YaasPubsubSubscribeNode(config) {
         RED.nodes.createNode(this, config);
         var node = this;
 
-        node.client_id = config.client_id;
-        node.client_secret = config.client_secret;
-        node.application_id = config.application_id;
+        node.client_id = config.clientId;
+        node.client_secret = config.clientSecret;
+        node.application_id = config.applicationId;
         node.topic = config.topic;
         node.interval = config.interval;
 
@@ -23,8 +24,21 @@ module.exports = function(RED) {
 
             //start inteval polling
             node.intervalID = setInterval(function(){
-                var msg = {payload:access_token};
-                node.send(msg);
+                pubsub.readNext(access_token, node.application_id, node.topic)
+                .then(function(evt){
+                    if (evt != undefined)
+                    {
+                        
+                        node.send(evt.events[0]); 
+                    }
+                    else
+                    {
+
+                    }
+                }, console.log);
+                
+
+                
             }, node.interval);            
 
         }, console.log);        
