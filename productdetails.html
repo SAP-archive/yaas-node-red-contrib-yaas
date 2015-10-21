@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('get productdetails',{
+    RED.nodes.registerType('get product details by ID',{
         category: 'yaas',
         color: '#C7E9C0',
         defaults: {
@@ -8,14 +8,38 @@
         inputs: 1,
         outputs: 1,
         icon: "labs.png",
-        paletteLabel: 'productdetails',
+        paletteLabel: 'productdetailsbyid',
         label: function() {
-            return 'Get product details';
+            return 'get product details by ID';
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="get productdetails">
+<script type="text/x-red" data-template-name="get product details by ID">
+    <div class="form-row">
+        <label for="node-input-yaasCredentials"><i class="fa"></i> Credentials</label>
+        <input type="text" id="node-input-yaasCredentials">
+    </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('get product details by query',{
+        category: 'yaas',
+        color: '#C7E9C0',
+        defaults: {
+            yaasCredentials: {type:"yaas-credentials", required:true}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "labs.png",
+        paletteLabel: 'productdetailsbyquery',
+        label: function() {
+            return 'get product details by query';
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="get product details by query">
     <div class="form-row">
         <label for="node-input-yaasCredentials"><i class="fa"></i> Credentials</label>
         <input type="text" id="node-input-yaasCredentials">
