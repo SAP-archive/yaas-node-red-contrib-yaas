@@ -11,10 +11,17 @@
         inputs:0,
         outputs:1,
         icon: "labs.png",
-        //align : "left",
         paletteLabel : 'pubsub',
         label: function() {
-            return this.name || (this.applicationId + '/' + this.topic);
+
+            if(!this.str){
+                setTimeout(function(){
+                    if(this.yaasCredentials){
+                        this.str = RED.nodes.node(this.yaasCredentials).application_id + '/' + this.topic;
+                    }
+                }.bind(this), 10); 
+            }            
+            return this.name || this.str;
         }
     });
 </script>
