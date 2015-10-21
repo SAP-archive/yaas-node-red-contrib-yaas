@@ -9,6 +9,11 @@ module.exports = function(RED) {
         if (node.credentials) {
             node.client_secret = node.credentials.client_secret;
         }
+
+        var parts = node.application_id.split('.');
+
+        node.tenant = parts[0];
+        node.application = parts[1];
     }
     
     RED.nodes.registerType("yaas-credentials",YaasCredentialsNode,{
