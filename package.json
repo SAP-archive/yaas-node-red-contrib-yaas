@@ -14,7 +14,8 @@
   ],
   "node-red": {
     "nodes": {
-      "pubsub": "pubsub.js"
+      "pubsub": "pubsub.js",
+      "document": "document.js"
     }
   },
   "author": {

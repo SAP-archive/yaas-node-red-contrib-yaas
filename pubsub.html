@@ -13,7 +13,6 @@
         icon: "labs.png",
         paletteLabel : 'pubsub',
         label: function() {
-
             if(!this.str){
                 setTimeout(function(){
                     if(this.yaasCredentials){
@@ -68,7 +67,7 @@
         align : "right",
         paletteLabel : 'pubsub',
         label: function() {
-            return this.name || (this.applicationId + '/' + this.topic);
+            return this.name || this.topic;
         }
     });
 </script>
