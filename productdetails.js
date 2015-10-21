@@ -18,7 +18,7 @@ module.exports = function(RED) {
             })
             .then(function(product){
                 console.log(JSON.stringify(product));
-                node.send(product);
+                node.send({payload:product});
             })
             .catch(function(e){
                 console.error(e);
@@ -40,7 +40,7 @@ module.exports = function(RED) {
             })
             .then(function(products){
                 console.log('got ' + products.length + ' products for query: ' + msg.payload);
-                node.send(products);
+                node.send({payload:products});
             })
             .catch(function(e){
                 console.error(e);
