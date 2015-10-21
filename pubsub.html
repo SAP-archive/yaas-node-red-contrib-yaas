@@ -50,6 +50,56 @@
 </script>
 
 
+<script type="text/javascript">
+    RED.nodes.registerType('subscribenocommit',{
+        category: 'yaas',
+        color: '#C7E9C0',
+        defaults: {
+            name: {value:""},
+            yaasCredentials: {type:"yaas-credentials", required:true},
+            topic : {value:"button_pressed", required:true},
+            interval : {value:1000, required:false}
+        },
+        inputs:0,
+        outputs:1,
+        icon: "labs.png",
+        paletteLabel : 'pubsub (no commit)',
+        label: function() {
+            if(!this.str){
+                setTimeout(function(){
+                    if(this.yaasCredentials){
+                        this.str = RED.nodes.node(this.yaasCredentials).application_id + '/' + this.topic;
+                    }
+                }.bind(this), 10);
+            }
+            return this.name || this.str;
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="subscribenocommit">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-yaasCredentials"><i class="fa"></i> Credentials</label>
+        <input type="text" id="node-input-yaasCredentials">
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-comments-o"></i> Topic</label>
+        <input type="text" id="node-input-topic" placeholder="Topic">
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-comments-o"></i> Interval</label>
+        <input type="number" id="node-input-interval" min="1000" placeholder="value &gt; 1000">
+    </div>
+</script>
+<script type="text/x-red" data-help-name="subscribenocommit">
+    <p>
+       Poll the PubSub service, but without auto-committing the events
+    </p>
+</script>
 
 
 <script type="text/javascript">
