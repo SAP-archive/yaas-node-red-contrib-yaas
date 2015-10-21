@@ -142,3 +142,44 @@
        Publish
     </p>
 </script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('commit',{
+        category: 'yaas',
+        color: '#C7E9C0',
+        defaults: {
+            name: {value:""},
+            yaasCredentials: {type:"yaas-credentials", required:true},
+            topic : {value:"button_pressed", required:true}
+        },
+        inputs:1,
+        outputs:0,
+        icon: "labs.png",
+        align : "right",
+        paletteLabel : 'pubsub commit',
+        label: function() {
+            return this.name || this.topic;
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="commit">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-yaasCredentials"><i class="fa"></i> Credentials</label>
+        <input type="text" id="node-input-yaasCredentials">
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-comments-o"></i> Topic</label>
+        <input type="text" id="node-input-topic" placeholder="Topic">
+    </div>
+
+</script>
+<script type="text/x-red" data-help-name="commit">
+    <p>
+       Commit, needs input from <code>pubsub (no commit)</code>
+    </p>
+</script>
