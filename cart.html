@@ -1,0 +1,33 @@
+<script type="text/javascript">
+    RED.nodes.registerType('add to cart',{
+        category: 'yaas',
+        color: '#C7E9C0',
+        defaults: {
+            yaasCustomerCredentials: {type:"yaas-customer-credentials", required:true},
+            yaasCredentials: {type:"yaas-credentials", required:true},
+            quantity : {value:"1", required:true}
+        },
+        inputs: 1,
+        outputs: 0,
+        icon: "labs.png",
+        paletteLabel: 'add to cart',
+        label: function() {
+            return 'add to cart';
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="add to cart">
+    <div class="form-row">
+        <label for="node-input-yaasCustomerCredentials"><i class="fa fa-user"></i> Customer</label>
+        <input type="text" id="node-input-yaasCustomerCredentials">
+    </div>
+    <div class="form-row">
+        <label for="node-input-yaasCredentials"><i class="fa fa-user-secret"></i> Credentials</label>
+        <input type="text" id="node-input-yaasCredentials">
+    </div>
+    <div class="form-row">
+        <label for="node-input-quantity"><i class="fa fa-plus"></i> Quantity</label>
+        <input type="text" id="node-input-quantity">
+    </div>
+</script>
