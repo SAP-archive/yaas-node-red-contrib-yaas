@@ -16,9 +16,9 @@ module.exports = function(RED) {
         node.status({fill: "red", shape: "ring", text: "disconnected"});
 
         oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, ['hybris.repository_manage'])
-            .then(function(access_token) {
+            .then(function(authData) {
                 node.status({fill: "green", shape: "dot", text: "connected"});
-                node.access_token = access_token;
+                node.access_token = authData.access_token;
             }, console.log);
 
         node.on("input",function(msg) {

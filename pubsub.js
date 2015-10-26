@@ -18,13 +18,13 @@ module.exports = function(RED) {
         
         //get oauth2 access token
         oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, [])
-        .then(function(access_token) {
+        .then(function(authData) {
             node.status({fill:"green",shape:"dot",text:"polling"});  
 
             //start inteval polling
             node.intervalID = setInterval(function(){
                 node.log("Polling for " + node.yaasCredentials.application_id + '/' + node.topic);
-                pubsub.readNext(access_token, node.yaasCredentials.application_id, node.topic, true)
+                pubsub.readNext(authData.access_token, node.yaasCredentials.application_id, node.topic, true)
                 .then(function(evt){
                     if (evt != undefined)
                     {
@@ -64,13 +64,13 @@ module.exports = function(RED) {
 
         //get oauth2 access token
         oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, [])
-            .then(function(access_token) {
+            .then(function(authData) {
                 node.status({fill:"green",shape:"dot",text:"polling"});
 
                 //start inteval polling
                 node.intervalID = setInterval(function(){
                     node.log("Polling for " + node.yaasCredentials.application_id + '/' + node.topic);
-                    pubsub.readNext(access_token, node.yaasCredentials.application_id, node.topic, false)
+                    pubsub.readNext(authData.access_token, node.yaasCredentials.application_id, node.topic, false)
                         .then(function(evt){
                             if (evt != undefined)
                             {
@@ -102,8 +102,8 @@ module.exports = function(RED) {
         node.status({fill:"red",shape:"ring",text:"disconnected"});
 
         oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, [])
-        .then(function(access_token) {
-            node.access_token = access_token;
+        .then(function(authData) {
+            node.access_token = authData.access_token;
 
             pubsub.createTopic(node.access_token, node.topic)
             .then(function(createTopicBody){
@@ -150,8 +150,8 @@ module.exports = function(RED) {
         node.status({fill:"red",shape:"ring",text:"disconnected"});
 
         oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, [])
-            .then(function(access_token) {
-                node.access_token = access_token;
+            .then(function(authData) {
+                node.access_token = authData.access_token;
                 node.status({fill:"green",shape:"dot",text:"ready"});
             }, console.log);
 

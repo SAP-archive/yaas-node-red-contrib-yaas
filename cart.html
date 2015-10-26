@@ -5,7 +5,9 @@
         defaults: {
             yaasCustomerCredentials: {type:"yaas-customer-credentials", required:true},
             yaasCredentials: {type:"yaas-credentials", required:true},
-            quantity : {value:"1", required:true}
+            quantity : {value:"1", required:true},
+            siteCode : {value:"main", required:true},
+            currency : {value:"USD", required:true}
         },
         inputs: 1,
         outputs: 0,
@@ -29,5 +31,13 @@
     <div class="form-row">
         <label for="node-input-quantity"><i class="fa fa-plus"></i> Quantity</label>
         <input type="text" id="node-input-quantity">
+    </div>
+    <div class="form-row">
+        <label for="node-input-siteCode"><i class="fa fa-globe"></i> Site code</label>
+        <input type="text" id="node-input-siteCode">
+    </div>
+    <div class="form-row">
+        <label for="node-input-currency"><i class="fa fa-money"></i> Currency</label>
+        <input type="text" id="node-input-currency">
     </div>
 </script>

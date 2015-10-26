@@ -13,12 +13,11 @@ module.exports = function(RED) {
         node.on('input',function(msg) {
             console.log('got id: ' + msg.payload);
             oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, [])
-            .then(function(access_token) {
-                return productdetails.getDetailsByID(node.yaasCredentials.tenant, access_token, msg.payload);
+            .then(function(authData) {
+                return productdetails.getDetailsByID(authData.tenant, authData.access_token, msg.payload);
             })
-            .then(function(product){
-                console.log(JSON.stringify(product));
-                node.send({payload:product});
+            .then(function(body){
+                node.send({payload:body});
             })
             .catch(function(e){
                 console.error(e);
@@ -35,8 +34,8 @@ module.exports = function(RED) {
         node.on('input',function(msg) {
             console.log('got query: ' + msg.payload);
             oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, [])
-            .then(function(access_token) {
-                return productdetails.getDetailsByQuery(node.yaasCredentials.tenant, access_token, msg.payload);
+            .then(function(authData) {
+                return productdetails.getDetailsByQuery(authData.tenant, authData.access_token, msg.payload);
             })
             .then(function(products){
                 console.log('got ' + products.length + ' products for query: ' + msg.payload);
