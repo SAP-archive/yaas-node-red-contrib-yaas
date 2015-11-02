@@ -17,6 +17,7 @@ module.exports = function(RED) {
 
             var productdetails = (msg.payload.constructor === Array) ? msg.payload[0] : msg.payload;
             var product = productdetails.product;
+            product.images = product.media;
 
             /*
             product.images = [
