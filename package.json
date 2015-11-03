@@ -25,6 +25,7 @@
   },
   "license": "Beerware",
   "dependencies": {
-    "request": "^2.65.0"
+    "request": "^2.65.0",
+    "stripe": "^4.0.0"
   }
 }

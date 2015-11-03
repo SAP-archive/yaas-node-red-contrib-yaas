@@ -44,21 +44,21 @@ module.exports = function(RED) {
 
                 return customer.login(authData.tenant, authData.access_token, node.yaasCustomerCredentials.email, node.yaasCustomerCredentials.password)
                 .then(function(token){
-                    console.log('got customer token: ' + token);
+                    console.log('cart got customer token: ' + token);
                     customerToken = token;
                     return customer.me(authData.tenant, customerToken);
                 })
-                .then(function(customerId){
-                    console.log('got customer id:  ' + customerId);
-                    return cart.getCartOrCreateForCustomer(authData.tenant, customerToken, customerId, siteCode, currency);
+                .then(function(customer){
+                    console.log('cart got customer id:  ' + customer.customerNumber);
+                    return cart.getCartOrCreateForCustomer(authData.tenant, customerToken, customer.customerNumber, siteCode, currency);
                 })
                 .then(function(cartId){
-                    console.log('got cart id: ' + cartId);
+                    console.log('cart got cart id: ' + cartId);
                     return cart.addProductToCart(authData.tenant, customerToken, cartId, product, price, quantity);
                 });
             })
-            .then(function(zeug){
-                console.log(zeug);
+            .then(function(cart){
+                node.send({payload:cart.cartId});
             })
             .catch(function(e){
                 console.error(e);
