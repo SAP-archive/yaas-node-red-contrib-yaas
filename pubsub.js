@@ -13,18 +13,19 @@ module.exports = function(RED) {
 
         node.topic = config.topic;
         node.interval = config.interval;
+        node.application_id = (config.application_id == "") ? node.yaasCredentials.application_id : config.application_id;
 
         node.status({fill:"red",shape:"ring",text:"disconnected"});
         
         //get oauth2 access token
-        oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, [])
+        oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, ["hybris.pubsub.topic=" + node.application_id + "." + node.topic])
         .then(function(authData) {
             node.status({fill:"green",shape:"dot",text:"polling"});  
 
             //start inteval polling
             node.intervalID = setInterval(function(){
-                node.log("Polling for " + node.yaasCredentials.application_id + '/' + node.topic);
-                pubsub.readNext(authData.access_token, node.yaasCredentials.application_id, node.topic, true)
+                //node.log("Polling for " + node.yaasCredentials.application_id + '/' + node.topic);
+                pubsub.readNext(authData.access_token, node.application_id, node.topic, true)
                 .then(function(evt){
                     if (evt != undefined)
                     {
@@ -69,7 +70,7 @@ module.exports = function(RED) {
 
                 //start inteval polling
                 node.intervalID = setInterval(function(){
-                    node.log("Polling for " + node.yaasCredentials.application_id + '/' + node.topic);
+                    //node.log("Polling for " + node.yaasCredentials.application_id + '/' + node.topic);
                     pubsub.readNext(authData.access_token, node.yaasCredentials.application_id, node.topic, false)
                         .then(function(evt){
                             if (evt != undefined)

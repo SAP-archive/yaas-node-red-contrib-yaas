@@ -6,7 +6,8 @@
             name: {value:""},
             yaasCredentials: {type:"yaas-credentials", required:true},
             topic : {value:"button_pressed", required:true},
-            interval : {value:500, required:false}
+            interval : {value:500, required:false},
+            application_id : {value:"", required:false}
         },
         inputs:0,
         outputs:1,
@@ -18,18 +19,18 @@
                     if(this.yaasCredentials){
                         this.str = RED.nodes.node(this.yaasCredentials).application_id + '/' + this.topic;
                     }
-                }.bind(this), 10); 
-            }            
+                }.bind(this), 10);
+            }
             return this.name || this.str;
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="subscribe">   
+<script type="text/x-red" data-template-name="subscribe">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
-    </div>      
+    </div>
     <div class="form-row">
         <label for="node-input-yaasCredentials"><i class="fa"></i> Credentials</label>
         <input type="text" id="node-input-yaasCredentials">
@@ -37,11 +38,15 @@
     <div class="form-row">
         <label for="node-input-topic"><i class="fa fa-comments-o"></i> Topic</label>
         <input type="text" id="node-input-topic" placeholder="Topic">
-    </div>   
+    </div>
+    <div class="form-row">
+        <label for="node-input-application_id"><i class="fa fa-comments-o"></i> Application ID (Optional)</label>
+        <input type="text" id="node-input-application_id" placeholder="">
+    </div>
     <div class="form-row">
         <label for="node-input-topic"><i class="fa fa-comments-o"></i> Interval</label>
         <input type="number" id="node-input-interval" placeholder="500">
-    </div>      
+    </div>
 </script>
 <script type="text/x-red" data-help-name="subscribe">
     <p>
