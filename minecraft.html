@@ -1,7 +1,7 @@
 <script type="text/javascript">
     RED.nodes.registerType('blockid',{
         category: 'minecraft',
-        color: '#A7E9A0',
+        color: '#A7A7A7',
         defaults: {
             name: {value:""},
             server: {type:"minecraft-config", required:true},
@@ -12,7 +12,7 @@
         icon: "labs.png",
         paletteLabel : 'blockid',
         label: function() {
-            return 'bbb' || this.name || 'blockid';
+            return this.name || 'blockid';
         }
     });
 </script>
@@ -34,5 +34,51 @@
 <script type="text/x-red" data-help-name="blockid">
     <p>
        BlockId
+    </p>
+</script>
+
+
+<script type="text/javascript">
+    RED.nodes.registerType('setblock',{
+        category: 'minecraft',
+        color: '#A7A7A7',
+        defaults: {
+            name: {value:""},
+            server: {type:"minecraft-config", required:true},
+            blocktype: {value:"AIR"},
+            blockdata: {value:""}
+        },
+        inputs:1,
+        outputs:0,
+        icon: "labs.png",
+        paletteLabel : 'setblock',
+        label: function() {
+            return this.name || 'setblock';
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="setblock">   
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>      
+    <div class="form-row">
+        <label for="node-input-server"><i class="fa"></i> Minecraft Server</label>
+        <input type="text" id="node-input-server">
+    </div>
+    <div class="form-row">
+        <label for="node-input-blocktype"><i class="fa fa-comments-o"></i> Block Type</label>
+        <input type="text" id="node-input-blocktype" placeholder="AIR">
+    </div>     
+    <div class="form-row">
+        <label for="node-input-blockdata"><i class="fa fa-comments-o"></i> Block Data</label>
+        <input type="number" id="node-input-blockdata">
+    </div> 
+
+</script>
+<script type="text/x-red" data-help-name="setblock">
+    <p>
+       setblock
     </p>
 </script>
