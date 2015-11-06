@@ -1,25 +1,25 @@
 <script type="text/javascript">
-    RED.nodes.registerType('add to cart',{
+    RED.nodes.registerType('checkout',{
         category: 'yaas',
         color: '#C7E9C0',
         defaults: {
             yaasCustomerCredentials: {type:"yaas-customer-credentials", required:true},
             yaasCredentials: {type:"yaas-credentials", required:true},
-            quantity : {value:"1", required:true},
+            stripeCredentials : {type:"stripe-credentials", required:true},
             siteCode : {value:"main", required:true},
             currency : {value:"USD", required:true}
         },
         inputs: 1,
-        outputs: 1,
+        outputs: 0,
         icon: "labs.png",
-        paletteLabel: 'add to cart',
+        paletteLabel: 'checkout',
         label: function() {
-            return 'add to cart';
+            return 'checkout';
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="add to cart">
+<script type="text/x-red" data-template-name="checkout">
     <div class="form-row">
         <label for="node-input-yaasCustomerCredentials"><i class="fa fa-user"></i> Customer</label>
         <input type="text" id="node-input-yaasCustomerCredentials">
@@ -29,9 +29,9 @@
         <input type="text" id="node-input-yaasCredentials">
     </div>
     <div class="form-row">
-        <label for="node-input-quantity"><i class="fa fa-plus"></i> Quantity</label>
-        <input type="text" id="node-input-quantity">
-    </div>
+        <label for="node-input-stripeCredentials"><i class="fa fa-user-secret"></i> Stripe Credentials</label>
+        <input type="text" id="node-input-stripeCredentials">
+    </div>    
     <div class="form-row">
         <label for="node-input-siteCode"><i class="fa fa-globe"></i> Site code</label>
         <input type="text" id="node-input-siteCode">
@@ -41,8 +41,8 @@
         <input type="text" id="node-input-currency">
     </div>
 </script>
-<script type="text/x-red" data-help-name="add to cart">
+<script type="text/x-red" data-help-name="checkout">
     <p>
-       Add a product to a cart
+       Checkout a cart
     </p>
 </script>
