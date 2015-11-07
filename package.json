@@ -25,6 +25,7 @@
   },
   "license": "Beerware",
   "dependencies": {
+    "minecraft-pi-promise": "^0.5.0",
     "request": "^2.65.0",
     "stripe": "^4.0.0",
     "underscore": "^1.8.3"
