@@ -12,7 +12,7 @@ module.exports = function(RED) {
 
         node.on('input',function(msg) {
             console.log('got id: ' + msg.payload);
-            oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, [])
+            oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, ['hybris.pcm_read'])
             .then(function(authData) {
                 return productdetails.getDetailsByID(authData.tenant, authData.access_token, msg.payload);
             })
