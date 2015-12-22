@@ -1,9 +1,6 @@
 module.exports = function(RED) {
    
-    var request = require("request");
-    var oauth2 = require('./lib/oauth2.js');
-    var pubsub = require('./lib/pubsub.js');
-
+    var yaas = require("yaas.js");
 
     function YaasPubsubSubscribeNode(config) {
         RED.nodes.createNode(this, config);
@@ -14,35 +11,43 @@ module.exports = function(RED) {
         node.topic = config.topic;
         node.interval = config.interval;
         node.application_id = (config.application_id == "") ? node.yaasCredentials.application_id : config.application_id;
+        node.auto_commit = config.auto_commit;
 
         node.status({fill:"red",shape:"ring",text:"disconnected"});
-        
+
+        console.log("hybris.pubsub.topic=" + node.application_id + "." + node.topic);
+
         //get oauth2 access token
-        oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, ["hybris.pubsub.topic=" + node.application_id + "." + node.topic])
-        .then(function(authData) {
-            node.status({fill:"green",shape:"dot",text:"polling"});  
+        yaas.init(
+          node.yaasCredentials.client_id, // theClientId
+          node.yaasCredentials.client_secret, // theClientSecret
+          "hybris.pubsub.topic=" + node.application_id + "." + node.topic, // theScope,
+          node.application_id // theProjectId
+        )
+        .then(function(response) {
+            node.status({fill:"green",shape:"dot",text:"polling"});
 
             //start inteval polling
             node.intervalID = setInterval(function(){
                 //node.log("Polling for " + node.yaasCredentials.application_id + '/' + node.topic);
-                pubsub.readNext(authData.access_token, node.application_id, node.topic, true)
+                yaas.pubsub.read(node.application_id, node.topic, 1, node.auto_commit)
                 .then(function(evt){
                     if (evt != undefined)
                     {
-                        node.send(evt.events[0]); 
+                        console.log("received event: " + JSON.stringify(evt));
+                        var theFirstEvent = evt.events[0];
+                        theFirstEvent.token = evt.token;
+                        node.send(theFirstEvent);
                     }
                     else
                     {
-
+                        // PubSub does not have a new event. All good!
                     }
                 }, console.log);
-                
 
-                
-            }, node.interval);            
+            }, node.interval);
 
-        }, console.log);        
-
+        }, console.log);
         node.on('close', function() {
             if (node.intervalID) {
                 clearInterval(node.intervalID);
@@ -52,47 +57,6 @@ module.exports = function(RED) {
 
     RED.nodes.registerType("subscribe",YaasPubsubSubscribeNode);
 
-    function YaasPubsubSubscribeNoCommitNode(config) {
-        RED.nodes.createNode(this, config);
-        var node = this;
-
-        node.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
-
-        node.topic = config.topic;
-        node.interval = config.interval;
-
-        node.status({fill:"red",shape:"ring",text:"disconnected"});
-
-        //get oauth2 access token
-        oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, [])
-            .then(function(authData) {
-                node.status({fill:"green",shape:"dot",text:"polling"});
-
-                //start inteval polling
-                node.intervalID = setInterval(function(){
-                    //node.log("Polling for " + node.yaasCredentials.application_id + '/' + node.topic);
-                    pubsub.readNext(authData.access_token, node.yaasCredentials.application_id, node.topic, false)
-                        .then(function(evt){
-                            if (evt != undefined)
-                            {
-                                node.send(evt);
-                            }
-                            else
-                            {
-
-                            }
-                        }, console.log);
-                }, node.interval);
-            }, console.log);
-
-        node.on('close', function() {
-            if (node.intervalID) {
-                clearInterval(node.intervalID);
-            }
-        });
-    }
-    RED.nodes.registerType("subscribenocommit",YaasPubsubSubscribeNoCommitNode);
-
     function YaasPubsubPublishNode(config) {
         RED.nodes.createNode(this, config);
         var node = this;
@@ -101,38 +65,36 @@ module.exports = function(RED) {
         node.topic = config.topic;
         
         node.status({fill:"red",shape:"ring",text:"disconnected"});
+        // node.status({fill:"green",shape:"dot",text:"polling"});
 
-        oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, [])
-        .then(function(authData) {
-            node.access_token = authData.access_token;
-
-            pubsub.createTopic(node.access_token, node.topic)
-            .then(function(createTopicBody){
-                if (createTopicBody.status != 409) {
-                    node.log("topic " + node.yaasCredentials.application_id + '/' + node.topic + " created.");
-                }
-            }, console.log);
+        yaas.init(
+          node.yaasCredentials.client_id, // theClientId
+          node.yaasCredentials.client_secret, // theClientSecret
+          "hybris.pubsub.topic=" + node.application_id + "." + node.topic, // theScope,
+          node.application_id // theProjectId
+        )
+        .then(function(response) {
+            yaas.pubsub.createTopic(node.topic)
+            .then(function(createTopicBody) {
+                console.log("topic " + node.yaasCredentials.application_id + '/' + node.topic + " created.");
+            }, function(error) {
+              if(error.statusCode == 409) {
+                console.log("topic " + node.topic + " already exists.");
+              } else {
+                console.log("Error! " + JSON.stringify(error));
+              }
+            });
+        
+            node.on("input",function(msg) {
+              node.log('Publishing ' + node.yaasCredentials.application_id + '/' + node.topic + ': ' + msg.payload);
+              yaas.pubsub.publish(node.yaasCredentials.application_id, node.topic, msg.payload)
+              .then(function(){
+                node.log("Message published.");
+              }, console.log);
+            });
 
             node.status({fill:"green",shape:"dot",text:"ready"});  
-        }, console.log);     
-       
-        node.on("input",function(msg) {
-
-            if (!node.access_token)
-            {
-                node.error("No access_token, no publish!");
-                return;
-            }
-
-            node.log('Publishing ' + node.yaasCredentials.application_id + '/' + node.topic + ': ' + msg.payload);
-
-            pubsub.publish(node.access_token, node.yaasCredentials.application_id, node.topic, msg.payload)
-            .then(function(){
-                node.log("Message published.");
-            }, console.log);
-
         });
-
 
         node.on('close', function() {
             
@@ -147,32 +109,30 @@ module.exports = function(RED) {
 
         node.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
         node.topic = config.topic;
+        node.application_id = node.yaasCredentials.application_id;
 
         node.status({fill:"red",shape:"ring",text:"disconnected"});
-
-        oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, [])
-            .then(function(authData) {
-                node.access_token = authData.access_token;
-                node.status({fill:"green",shape:"dot",text:"ready"});
-            }, console.log);
+        node.status({fill:"yellow",shape:"dot",text:"no events"});
 
         node.on("input",function(msg) {
 
-            if (!node.access_token)
-            {
-                node.error("No access_token, no publish!");
-                return;
-            }
+            node.log('Committing ' + node.application_id + '/' + node.topic + ': ' + msg['token']);
 
-            node.log('Committing ' + node.yaasCredentials.application_id + '/' + node.topic + ': ' + msg['token']);
-
-            pubsub.commit(node.access_token, node.yaasCredentials.application_id, node.topic, msg['token'])
+            yaas.init(
+              node.yaasCredentials.client_id, // theClientId
+              node.yaasCredentials.client_secret, // theClientSecret
+              "hybris.pubsub.topic=" + node.application_id + "." + node.topic, // theScope,
+              node.application_id // theProjectId
+            )
+            .then(function(response) {
+                node.status({fill:"green",shape:"dot",text:"event received"});
+                yaas.pubsub.commit(node.application_id, node.topic, msg["token"])
                 .then(function(){
-                    node.log("Message committed.");
+                  node.log("Message committed.");
                 }, console.log);
+            });
 
         });
-
 
         node.on('close', function() {
 
