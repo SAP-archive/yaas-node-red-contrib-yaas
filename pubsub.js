@@ -1,6 +1,6 @@
 module.exports = function(RED) {
    
-    var yaas = require("yaas.js");
+    var YaaS = require("yaas.js");
 
     function YaasPubsubSubscribeNode(config) {
         RED.nodes.createNode(this, config);
@@ -18,6 +18,7 @@ module.exports = function(RED) {
         console.log("hybris.pubsub.topic=" + node.application_id + "." + node.topic);
 
         //get oauth2 access token
+        var yaas = new YaaS();
         yaas.init(
           node.yaasCredentials.client_id, // theClientId
           node.yaasCredentials.client_secret, // theClientSecret
@@ -67,6 +68,7 @@ module.exports = function(RED) {
         node.status({fill:"red",shape:"ring",text:"disconnected"});
         // node.status({fill:"green",shape:"dot",text:"polling"});
 
+        var yaas = new YaaS();
         yaas.init(
           node.yaasCredentials.client_id, // theClientId
           node.yaasCredentials.client_secret, // theClientSecret
@@ -118,6 +120,7 @@ module.exports = function(RED) {
 
             node.log('Committing ' + node.application_id + '/' + node.topic + ': ' + msg['token']);
 
+            var yaas = new YaaS();
             yaas.init(
               node.yaasCredentials.client_id, // theClientId
               node.yaasCredentials.client_secret, // theClientSecret
