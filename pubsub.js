@@ -2,6 +2,27 @@ module.exports = function(RED) {
    
     var YaaS = require("yaas.js");
 
+    var poll = {};
+    poll.count = 5;
+    poll.delta = 1;
+    poll.max = 10;
+    poll.toString = function() {
+      var str = "";
+      for (var i = 0; i < this.max; i++) {
+        if (this.count == i) {
+          str += (this.delta > 0) ? '>' : '<';
+        } else {
+          str += '-';
+        }
+      }
+      this.count += this.delta;
+      if (this.count >= this.max || this.count < 0) {
+        this.delta *= -1;
+        this.count += this.delta * 2;
+      }
+      return str;
+    };
+
     function YaasPubsubSubscribeNode(config) {
         RED.nodes.createNode(this, config);
         var node = this;
@@ -26,11 +47,12 @@ module.exports = function(RED) {
           node.application_id // theProjectId
         )
         .then(function(response) {
-            node.status({fill:"green",shape:"dot",text:"polling"});
+            node.status({fill:"yellow",shape:"dot",text:"polling"});
 
             //start inteval polling
             node.intervalID = setInterval(function(){
                 //node.log("Polling for " + node.yaasCredentials.application_id + '/' + node.topic);
+                node.status({fill:"green",shape:"dot",text:"polling " + poll.toString()});
                 yaas.pubsub.read(node.application_id, node.topic, 1, node.auto_commit)
                 .then(function(evt){
                     if (evt != undefined)
