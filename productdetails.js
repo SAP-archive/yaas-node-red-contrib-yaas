@@ -10,11 +10,13 @@ module.exports = function(RED) {
 
         node.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
 
+        console.log(config.currency);
+
         node.on('input',function(msg) {
             console.log('got id: ' + msg.payload);
             oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, ['hybris.pcm_read'])
             .then(function(authData) {
-                return productdetails.getDetailsByID(authData.tenant, authData.access_token, msg.payload);
+                return productdetails.getDetailsByID(authData.tenant, authData.access_token, msg.payload, config.currency);
             })
             .then(function(body){
                 node.send({payload:body});
@@ -30,12 +32,14 @@ module.exports = function(RED) {
         var node = this;
 
         node.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
+        
+        console.log(config.currency);
 
         node.on('input',function(msg) {
             console.log('got query: ' + msg.payload);
             oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, [])
             .then(function(authData) {
-                return productdetails.getDetailsByQuery(authData.tenant, authData.access_token, msg.payload);
+                return productdetails.getDetailsByQuery(authData.tenant, authData.access_token, msg.payload, config.currency);
             })
             .then(function(products){
                 console.log('got ' + products.length + ' products for query: ' + msg.payload);

@@ -3,7 +3,8 @@
         category: 'yaas',
         color: '#C7E9C0',
         defaults: {
-            yaasCredentials: {type:"yaas-credentials", required:true}
+          yaasCredentials: {type:"yaas-credentials", required:true},
+          currency : {value:"USD", required:true}
         },
         inputs: 1,
         outputs: 1,
@@ -20,6 +21,10 @@
         <label for="node-input-yaasCredentials"><i class="fa"></i> Credentials</label>
         <input type="text" id="node-input-yaasCredentials">
     </div>
+    <div class="form-row">
+        <label for="node-input-currency"><i class="fa fa-money"></i> Currency</label>
+        <input type="text" id="node-input-currency">
+    </div>
 </script>
 
 <script type="text/javascript">
@@ -27,7 +32,8 @@
         category: 'yaas',
         color: '#C7E9C0',
         defaults: {
-            yaasCredentials: {type:"yaas-credentials", required:true}
+          yaasCredentials: {type:"yaas-credentials", required:true},
+          currency : {value:"USD", required:true}
         },
         inputs: 1,
         outputs: 1,
@@ -43,5 +49,9 @@
     <div class="form-row">
         <label for="node-input-yaasCredentials"><i class="fa"></i> Credentials</label>
         <input type="text" id="node-input-yaasCredentials">
+    </div>
+    <div class="form-row">
+        <label for="node-input-currency"><i class="fa fa-money"></i> Currency</label>
+        <input type="text" id="node-input-currency">
     </div>
 </script>
