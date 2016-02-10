@@ -66,7 +66,10 @@ module.exports = function(RED) {
                     {
                         // PubSub does not have a new event. All good!
                     }
-                }, console.log);
+                }, function(err) {
+                    node.status({fill:"red",shape:"dot",text:"error"});
+                    console.log('ERROR pubsub', err);
+                });
 
             }, node.interval);
 
