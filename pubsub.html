@@ -1,7 +1,7 @@
 <script type="text/javascript">
     RED.nodes.registerType('subscribe',{
         category: 'yaas',
-        color: '#C7E9C0',
+        color: '#1b91e2',
         defaults: {
             name: {value:""},
             yaasCredentials: {type:"yaas-credentials", required:true},
@@ -12,7 +12,7 @@
         },
         inputs:0,
         outputs:1,
-        icon: "labs.png",
+        icon: "yaas.png",
         paletteLabel : 'pubsub',
         label: function() {
             if(!this.str){
@@ -62,7 +62,7 @@
 <script type="text/javascript">
     RED.nodes.registerType('publish',{
         category: 'yaas',
-        color: '#C7E9C0',
+        color: '#1b91e2',
         defaults: {
             name: {value:""},
             yaasCredentials: {type:"yaas-credentials", required:true},
@@ -70,7 +70,7 @@
         },
         inputs:1,
         outputs:0,
-        icon: "labs.png",
+        icon: "yaas.png",
         align : "right",
         paletteLabel : 'pubsub',
         label: function() {
@@ -103,7 +103,7 @@
 <script type="text/javascript">
     RED.nodes.registerType('commit',{
         category: 'yaas',
-        color: '#C7E9C0',
+        color: '#1b91e2',
         defaults: {
             name: {value:""},
             yaasCredentials: {type:"yaas-credentials", required:true},
@@ -111,7 +111,7 @@
         },
         inputs:1,
         outputs:0,
-        icon: "labs.png",
+        icon: "yaas.png",
         align : "right",
         paletteLabel : 'pubsub commit',
         label: function() {

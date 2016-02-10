@@ -1,7 +1,7 @@
 <script type="text/javascript">
     RED.nodes.registerType('write',{
         category: 'yaas',
-        color: '#C7E9C0',
+        color: '#1b91e2',
         defaults: {
             name: {value: ""},
             yaasCredentials: {type:"yaas-credentials", required:true},
@@ -10,7 +10,7 @@
         },
         inputs: 1,
         outputs: 0,
-        icon: "labs.png",
+        icon: "yaas.png",
         paletteLabel: 'document',
         label: function() {
             return this.name || ('write ' + this.documentType + ' to document repo');

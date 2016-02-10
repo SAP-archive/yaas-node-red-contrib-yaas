@@ -1,14 +1,14 @@
 <script type="text/javascript">
     RED.nodes.registerType('get product details by ID',{
         category: 'yaas',
-        color: '#C7E9C0',
+        color: '#1b91e2',
         defaults: {
           yaasCredentials: {type:"yaas-credentials", required:true},
           currency : {value:"USD", required:true}
         },
         inputs: 1,
         outputs: 1,
-        icon: "labs.png",
+        icon: "yaas.png",
         paletteLabel: 'product by ID',
         label: function() {
             return 'product by ID';
@@ -30,14 +30,14 @@
 <script type="text/javascript">
     RED.nodes.registerType('get product details by query',{
         category: 'yaas',
-        color: '#C7E9C0',
+        color: '#1b91e2',
         defaults: {
           yaasCredentials: {type:"yaas-credentials", required:true},
           currency : {value:"USD", required:true}
         },
         inputs: 1,
         outputs: 1,
-        icon: "labs.png",
+        icon: "yaas.png",
         paletteLabel: 'products by query',
         label: function() {
             return 'products by query';
