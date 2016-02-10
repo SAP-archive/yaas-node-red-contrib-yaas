@@ -31,7 +31,7 @@ module.exports = function(RED) {
 
         node.topic = config.topic;
         node.interval = config.interval;
-        node.application_id = (config.application_id == "") ? node.yaasCredentials.application_id : config.application_id;
+        node.application_id = (config.application_id === "") ? node.yaasCredentials.application_id : config.application_id;
         node.auto_commit = config.auto_commit;
 
         node.status({fill:"red",shape:"ring",text:"disconnected"});
@@ -55,7 +55,7 @@ module.exports = function(RED) {
                 node.status({fill:"green",shape:"dot",text:"polling " + poll.toString()});
                 yaas.pubsub.read(node.application_id, node.topic, 1, node.auto_commit)
                 .then(function(evt){
-                    if (evt != undefined)
+                    if (evt !== undefined)
                     {
                         console.log("received event: " + JSON.stringify(evt));
                         var theFirstEvent = evt.events[0];
@@ -143,7 +143,7 @@ module.exports = function(RED) {
 
         node.on("input",function(msg) {
 
-            node.log('Committing ' + node.application_id + '/' + node.topic + ': ' + msg['token']);
+            node.log('Committing ' + node.application_id + '/' + node.topic + ': ' + msg.token);
 
             var yaas = new YaaS();
             yaas.init(
@@ -154,7 +154,7 @@ module.exports = function(RED) {
             )
             .then(function(response) {
                 node.status({fill:"green",shape:"dot",text:"event received"});
-                yaas.pubsub.commit(node.application_id, node.topic, msg["token"])
+                yaas.pubsub.commit(node.application_id, node.topic, msg.token)
                 .then(function(){
                   node.log("Message committed.");
                 }, console.log);
@@ -167,4 +167,4 @@ module.exports = function(RED) {
         });
     }
     RED.nodes.registerType("commit",YaasPubsubCommitNode);
-}
+};
