@@ -11,28 +11,17 @@ module.exports = function(RED) {
 
         node.yaasCustomerCredentials = RED.nodes.getNode(config.yaasCustomerCredentials);
         node.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
+        node.status({fill:"yellow",shape:"dot",text:"idle"});
 
         node.on('input', function(msg) {
-
 
             var productdetails = (msg.payload.constructor === Array) ? msg.payload[0] : msg.payload;
             var product = productdetails.product;
             product.images = product.media;
 
-            /*
-            product.images = [
-                { 
-                    id : '55e6fb084dceaa411edea73e',
-                    url : 'http://i.imgur.com/c5tATL3.jpg\"></img> asdf <h1 style="z-index:1">YAAS BUERSTE</h1><img src="http://i.imgur.com/c5tATL3.jpg" '}
-            ];
-            */
-
             var price = productdetails.prices[0];
-
-            /*
-            price.originalAmount = 2;
-            price.effectiveAmount = 3.2;
-            */
+            
+            node.status({fill:"green", shape:"dot", text:product.name});
 
             var quantity = Math.round(node.quantity);
             var currency = config.currency;
@@ -59,9 +48,11 @@ module.exports = function(RED) {
             })
             .then(function(cart){
                 node.send({payload:cart.cartId});
+                node.status({fill:"yellow",shape:"dot",text:"idle"});
             })
             .catch(function(e){
                 console.error(e);
+                node.status({fill:"red",shape:"dot",text:"error"});
             });
         });
     }

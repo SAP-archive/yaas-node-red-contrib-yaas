@@ -16,6 +16,8 @@ module.exports = function(RED) {
         node.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
         node.stripeCredentials = RED.nodes.getNode(config.stripeCredentials);
 
+        node.status({fill:"yellow",shape:"dot",text:"idle"});
+
         node.on('input', function(msg) {
             var currency = config.currency;
             var siteCode = config.siteCode;
@@ -24,6 +26,8 @@ module.exports = function(RED) {
             var cartId = msg.payload;
 
             var authData;
+
+            node.status({fill:"green",shape:"dot",text:"placing order"});
 
             oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, [])
             .then(function(data) {
@@ -49,10 +53,13 @@ module.exports = function(RED) {
             }, console.error)
             .then(function(stripeToken) {
                 console.log("checkout got stripe token: " + stripeToken);
+                node.status({fill:"green",shape:"dot",text:"Stripe"});
                 return checkout.checkoutCart(customerToken, authData.tenant, cartId, customerVar, stripeToken);
             }, console.error)
-            .then(function(zeug){
-                console.log(zeug);
+            .then(function(order){
+                console.log(order);
+                node.status({fill:"yellow",shape:"dot",text:order.orderId});
+                node.log("Order placed: " + order.orderId);
             }, console.error);
         });
 

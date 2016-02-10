@@ -10,19 +10,22 @@ module.exports = function(RED) {
 
         node.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
 
-        console.log(config.currency);
+        node.status({fill:"yellow",shape:"dot",text:"idle"});
 
         node.on('input',function(msg) {
             console.log('got id: ' + msg.payload);
+            node.status({fill:"green",shape:"dot",text:"retrieve product"});
             oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, ['hybris.pcm_read'])
             .then(function(authData) {
                 return productdetails.getDetailsByID(authData.tenant, authData.access_token, msg.payload, config.currency);
             })
             .then(function(body){
                 node.send({payload:body});
+                node.status({fill:"yellow",shape:"dot",text:body.product.name});
             })
             .catch(function(e){
                 console.error(e);
+                node.status({fill:"red",shape:"dot",text:"error"});
             });
         });
     }

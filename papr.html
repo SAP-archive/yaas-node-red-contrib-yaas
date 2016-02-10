@@ -1,6 +1,6 @@
 <script type="text/javascript">
     RED.nodes.registerType('papr add',{
-        category: 'yaas',
+        category: 'yaas_hackathon',
         color: '#FFFFFF',
         defaults: {
             yaasCustomerCredentials: {type:"yaas-customer-credentials", required:true},
@@ -9,7 +9,7 @@
         },
         inputs: 1,
         outputs: 1,
-        icon: "labs.png",
+        icon: "yaas.png",
         paletteLabel: 'papr add',
         label: function() {
             return 'papr add';
@@ -40,7 +40,7 @@
 
 <script type="text/javascript">
     RED.nodes.registerType('papr decrease',{
-        category: 'yaas',
+        category: 'yaas_hackathon',
         color: '#FFFFFF',
         defaults: {
             yaasCustomerCredentials: {type:"yaas-customer-credentials", required:true},
@@ -48,7 +48,7 @@
         },
         inputs: 1,
         outputs: 1,
-        icon: "labs.png",
+        icon: "yaas.png",
         paletteLabel: 'papr decrease',
         label: function() {
             return 'papr decrease';
