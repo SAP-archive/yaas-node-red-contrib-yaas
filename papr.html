@@ -1,4 +1,38 @@
 <script type="text/javascript">
+    RED.nodes.registerType('get papr stock',{
+        category: 'yaas_hackathon',
+        color: '#FFFFFF',
+        defaults: {
+            yaasCustomerCredentials: {type:"yaas-customer-credentials", required:true},
+            yaasCredentials: {type:"yaas-credentials", required:true}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "yaas.png",
+        paletteLabel: 'get papr stock',
+        label: function() {
+            return 'get papr stock';
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="get papr stock">
+    <div class="form-row">
+        <label for="node-input-yaasCustomerCredentials"><i class="fa fa-user"></i> Customer</label>
+        <input type="text" id="node-input-yaasCustomerCredentials">
+    </div>
+    <div class="form-row">
+        <label for="node-input-yaasCredentials"><i class="fa fa-user-secret"></i> Credentials</label>
+        <input type="text" id="node-input-yaasCredentials">
+    </div>
+</script>
+<script type="text/x-red" data-help-name="get papr stock">
+    <p>
+       Get Papr stock
+    </p>
+</script>
+
+<script type="text/javascript">
     RED.nodes.registerType('papr add',{
         category: 'yaas_hackathon',
         color: '#FFFFFF',
