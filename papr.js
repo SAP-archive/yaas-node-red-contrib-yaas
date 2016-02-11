@@ -33,6 +33,7 @@ module.exports = function(RED) {
             })
             .then(function(body){
                 node.status({fill:"yellow",shape:"dot",text: "stock: " + body.stockLevel + " reorder: " + body.reorderLevel});
+                body.quantity = body.stockLevel;
                 node.send({payload:body});
             })
             .catch(function(e){
