@@ -52,7 +52,7 @@ module.exports = function(RED) {
 
         node.on('input', function(msg) {
           
-            var quantity = Math.round(node.quantity) || 1;
+            var quantity = Math.round(config.quantity) || 1;
             node.status({fill:"green",shape:"dot",text:"adding " + quantity});
             var customerToken;
 
@@ -72,6 +72,7 @@ module.exports = function(RED) {
             })
             .then(function(body){
                 node.status({fill:"yellow",shape:"dot",text: "stock: " + body.stockLevel + " reorder: " + body.reorderLevel});
+                body.quantity = body.stockLevel;
                 node.send({payload:body});
             })
             .catch(function(e){
