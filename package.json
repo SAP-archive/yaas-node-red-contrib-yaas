@@ -23,7 +23,7 @@
     "email": "labs@hybris.com",
     "url": "https://labs.hybris.com"
   },
-  "license": "Beerware",
+  "license": "Apache License 2.0",
   "dependencies": {
     "request": "^2.65.0",
     "stripe": "^4.0.0",
