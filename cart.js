@@ -116,29 +116,12 @@ module.exports = function(RED) {
             var customerId = customer.customerNumber;
             return getCartByCustomer(yaas, customerId, config.siteCode, config.currency)
             .then(function(response) {
-              console.log(response);
-              console.log(msg.payload);
               var coupon = msg.payload;
               coupon.currency = config.currency;
               coupon.discountRate = coupon.discountPercentage;
-              coupon.links = [
-                {
-                  "title": coupon.code,
-                  "rel": "validate",
-                  "type": "application/json",
-                  "href": "https://api.yaas.io/hybris/coupon/v1/" + node.tenant_id + "/coupons/" + coupon.code + "/validation"
-                },
-                {
-                  "title": coupon.code + " redeem",
-                  "rel": "redeem",
-                  "type": "application/json",
-                  "href": "https://api.yaas.io/hybris/coupon/v1/" + node.tenant_id + "/coupons/" + coupon.code + "/redemptions"
-                }
-              ];
               return yaas.cart.addDiscount(response.cartId, coupon);
             })
             .catch(function(error) {
-              console.error("Bla! ");
               console.error(JSON.stringify(error));
             });
           })

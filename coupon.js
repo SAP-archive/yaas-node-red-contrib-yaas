@@ -21,7 +21,7 @@ module.exports = function(RED) {
           node.on("input",function(msg) {
             yaas.coupon.get(msg.payload)
             .then(function(response) {
-              node.send({payload: response.body[0]}); // get first discount
+              node.send({payload: response.body});
             }, console.error);
           });
         });
