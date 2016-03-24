@@ -1,18 +1,18 @@
 module.exports = function(RED) {
-   
-    var request = require('request');
-    var oauth2 = require('./lib/oauth2.js');
-    var cart = require('./lib/cart.js');
-    var customer = require('./lib/customer.js');
+
     var YaaS = require("yaas.js");
 
     function YaasAddToCart(config) {
         RED.nodes.createNode(this, config);
+
         var node = this;
+        var yaas = new YaaS();
 
         node.yaasCustomerCredentials = RED.nodes.getNode(config.yaasCustomerCredentials);
         node.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
         node.status({fill:"yellow",shape:"dot",text:"idle"});
+
+        node.tenant_id = node.yaasCredentials.application_id.split(".")[0];
 
         node.on('input', function(msg) {
 
@@ -21,38 +21,28 @@ module.exports = function(RED) {
             product.images = product.media;
 
             var price = productdetails.prices[0];
-            
+
             node.status({fill:"green", shape:"dot", text:product.name});
 
-            var quantity = Math.round(node.quantity);
-            var currency = config.currency;
-            var siteCode = config.siteCode;
-            var customerToken;
+            var quantity = Math.round(config.quantity);
 
-            oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, [])
-            .then(function(authData) {
-
-                return customer.login(authData.tenant, authData.access_token, node.yaasCustomerCredentials.email, node.yaasCustomerCredentials.password)
-                .then(function(token){
-                    console.log('cart got customer token: ' + token);
-                    customerToken = token;
-                    return customer.me(authData.tenant, customerToken);
-                })
-                .then(function(customer){
-                    console.log('cart got customer id:  ' + customer.customerNumber);
-                    return cart.getCartOrCreateForCustomer(authData.tenant, customerToken, customer.customerNumber, siteCode, currency);
-                })
-                .then(function(cartId){
-                    console.log('cart got cart id: ' + cartId);
-                    return cart.addProductToCart(authData.tenant, customerToken, cartId, product, price, quantity);
-                });
-            })
+            yaas.init(node.yaasCredentials.client_id,
+                node.yaasCredentials.client_secret,
+                'hybris.customer_read hybris.cart_manage',
+                node.tenant_id)
+            .then(function() {
+              return getCartByCustomerEmail(yaas, node.yaasCustomerCredentials.email, config.siteCode, config.currency);
+            }, console.error)
+            .then(function(response) {
+              return yaas.cart.addProduct(response.cartId, product, quantity, price);
+            }, console.error)
             .then(function(cart){
+              console.log(JSON.stringify(cart));
                 node.send({payload:cart.cartId});
                 node.status({fill:"yellow",shape:"dot",text:"idle"});
             })
             .catch(function(e){
-                console.error(e);
+                console.error(JSON.stringify(e));
                 node.status({fill:"red",shape:"dot",text:"error"});
             });
         });
@@ -60,7 +50,7 @@ module.exports = function(RED) {
 
     RED.nodes.registerType('add to cart', YaasAddToCart);
 
-    function getCartByCustomer(yaas, customerId, siteCode, currency) {
+    function getCartByCustomerId(yaas, customerId, siteCode, currency) {
       // Get/create shopping cart
       return new Promise(function(resolve, reject) {
         var cart = undefined;
@@ -81,13 +71,24 @@ module.exports = function(RED) {
             .then(function(response) {
               cart = response.body;
               resolve(cart);
-            }, console.error);
+            }, function(response) {
+              console.error(JSON.stringify(response));
+            });
           } else {
-            console.error(response);
+            console.error(JSON.stringify(response));
             reject();
           }
         });
       });
+    }
+
+    function getCartByCustomerEmail(yaas, customerEmail, siteCode, currency) {
+      return yaas.customer.getCustomers({q: 'contactEmail:"' + customerEmail + '"'})
+        .then(function(response) {
+          var customer = response.body[0];
+          var customerId = customer.customerNumber;
+          return getCartByCustomerId(yaas, customerId, siteCode, currency)
+        })
     }
 
     function YaasApplyDiscount(config) {
@@ -109,21 +110,14 @@ module.exports = function(RED) {
               'hybris.coupon_manage hybris.coupon_redeem hybris.coupon_redeem_on_behalf hybris.customer_read hybris.cart_manage',
               node.tenant_id)
           .then(function() {
-            return yaas.customer.getCustomers({q: 'contactEmail:"' + node.yaasCustomerCredentials.email + '"'});
+            return getCartByCustomerEmail(yaas, node.yaasCustomerCredentials.email, config.siteCode, config.currency);
           })
           .then(function(response) {
-            var customer = response.body[0];
-            var customerId = customer.customerNumber;
-            return getCartByCustomer(yaas, customerId, config.siteCode, config.currency)
-            .then(function(response) {
-              var coupon = msg.payload;
-              coupon.currency = config.currency;
-              coupon.discountRate = coupon.discountPercentage;
-              return yaas.cart.addDiscount(response.cartId, coupon);
-            })
-            .catch(function(error) {
-              console.error(JSON.stringify(error));
-            });
+            var coupon = msg.payload;
+            coupon.currency = config.currency;
+            coupon.discountRate = coupon.discountPercentage;
+            console.log("cart " + JSON.stringify(response));
+            return yaas.cart.addDiscount(response.cartId, coupon);
           })
           .then(console.log)
           .catch(console.error);
