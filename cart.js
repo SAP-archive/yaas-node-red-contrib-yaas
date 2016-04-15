@@ -107,7 +107,7 @@ module.exports = function(RED) {
 
           yaas.init(node.yaasCredentials.client_id,
               node.yaasCredentials.client_secret,
-              'hybris.coupon_redeem hybris.coupon_redeem_on_behalf hybris.customer_read hybris.cart_manage',
+              'hybris.customer_read hybris.cart_manage',
               node.tenant_id)
           .then(function() {
             return getCartByCustomerEmail(yaas, node.yaasCustomerCredentials.email, config.siteCode, config.currency);
