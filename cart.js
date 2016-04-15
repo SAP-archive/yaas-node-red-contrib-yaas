@@ -116,11 +116,14 @@ module.exports = function(RED) {
             var coupon = msg.payload;
             coupon.currency = config.currency;
             coupon.discountRate = coupon.discountPercentage;
+            console.log(coupon);
             console.log("cart " + JSON.stringify(response));
             return yaas.cart.addDiscount(response.cartId, coupon);
           })
           .then(console.log)
-          .catch(console.error);
+          .catch(function(error) {
+            console.error(JSON.stringify(error));
+          });
 
         });
 

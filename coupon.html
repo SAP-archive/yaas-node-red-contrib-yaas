@@ -3,14 +3,14 @@
         category: 'yaas',
         color: '#1b91e2',
         defaults: {
-            name: {value: "Coupon"},
+            name: {value: "Get Coupon"},
             yaasCredentials: {type:"yaas-credentials", required:true},
             tenantId: {value: "iotworkshop", required: true},
         },
         inputs: 1,
         outputs: 1,
         icon: "yaas.png",
-        paletteLabel: 'coupon',
+        paletteLabel: 'get coupon',
         label: function() {
             return this.name || ('get coupon');
         }
@@ -33,6 +33,59 @@
 </script>
 <script type="text/x-red" data-help-name="get">
     <p>
-       Get
+       Get Coupon
+    </p>
+</script>
+
+<!-- Create Coupon -->
+<script type="text/javascript">
+    RED.nodes.registerType('create coupon',{
+        category: 'yaas',
+        color: '#1b91e2',
+        defaults: {
+            name: {value: "Create Coupon"},
+            yaasCredentials: {type:"yaas-credentials", required:true},
+            couponType: {value: "PERCENT", required: true},
+            tenantId: {value: "iotworkshop", required: true},
+            currency: {value: "USD", required: true}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "yaas.png",
+        paletteLabel: 'create coupon',
+        label: function() {
+            return this.name || ('create coupon');
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="create coupon">
+    <div class="form-row">
+        <label for="node-input-yaasCredentials"><i class="fa"></i>Credentials</label>
+        <input type="text" id="node-input-yaasCredentials">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i>Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-couponType"><i class="fa"></i>Type</label>
+        <select id="node-input-couponType" style="width: 73%">
+            <option value="PERCENT" selected>Percentage</option>
+            <option value="ABSOLUTE">Absolute</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-currency"><i class="fa fa-money"></i> Currency</label>
+        <input type="text" id="node-input-currency">
+    </div>
+    <div class="form-row">
+        <label for="node-input-tenantId"><i class="fa fa-comments-o"></i>Tenant ID</label>
+        <input type="text" id="node-input-tenantId" placeholder="Tenant ID">
+    </div>
+</script>
+<script type="text/x-red" data-help-name="create coupon">
+    <p>
+       Create Coupon
     </p>
 </script>
