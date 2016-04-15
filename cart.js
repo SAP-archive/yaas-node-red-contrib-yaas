@@ -107,7 +107,6 @@ module.exports = function(RED) {
 
           yaas.init(node.yaasCredentials.client_id,
               node.yaasCredentials.client_secret,
-              //'hybris.coupon_manage hybris.coupon_redeem hybris.coupon_redeem_on_behalf hybris.customer_read hybris.cart_manage',
               'hybris.coupon_redeem hybris.coupon_redeem_on_behalf hybris.customer_read hybris.cart_manage',
               node.tenant_id)
           .then(function() {
@@ -115,10 +114,13 @@ module.exports = function(RED) {
           })
           .then(function(response) {
             var coupon = msg.payload;
+            // Fixing glitches in YaaS API, adding missing fields
+            if(coupon.discountType === "PERCENT") {
+              coupon.discountRate = coupon.discountPercentage;
+            } else {
+              coupon.amount = coupon.discountAbsolute.amount;
+            }
             coupon.currency = config.currency;
-            coupon.discountRate = coupon.discountPercentage;
-            //console.log(coupon);
-            //console.log("cart " + JSON.stringify(response));
             return yaas.cart.addDiscount(response.cartId, coupon);
           })
           .then(console.log)
