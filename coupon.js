@@ -14,7 +14,7 @@ module.exports = function(RED) {
         var yaas = new YaaS();
         yaas.init(node.yaasCredentials.client_id,
             node.yaasCredentials.client_secret,
-            'hybris.coupon_manage',
+            'hybris.coupon_redeem',
             node.tenant_id)
         .then(function() {
           node.status({fill: "green", shape: "dot", text: "connected"});
