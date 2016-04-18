@@ -64,7 +64,41 @@ module.exports = function(RED) {
         });
 
     }
+    
+    function Salesorders(config, orderId) {
+        RED.nodes.createNode(this, config);
+        var node = this;
+
+        node.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
+        var tenant = config.tenant;
+
+        node.status({ fill: "yellow", shape: "ring", text: "disconnected " + tenant });
+
+        var yaas = require("yaas.js");
+
+        node.on('input', function(msg) {
+
+            yaas.oauth.token(
+                node.yaasCredentials.client_id, // theClientId
+                node.yaasCredentials.client_secret, // theClientSecret
+                "hybris.order_read" // theScope,
+                //node.application_id // theProjectId
+            )
+                .then(function(token) {
+                    console.log("RH: ", token.access_token,
+                        ":", msg.payload,
+                        ">", tenant); //JSON.stringify(rh));
+
+                    node.status({ fill: "green", shape: "dot", text: "verbunden" });
+                    yaas.order.salesorders_orderId(token.access_token, msg.payload, tenant)
+                        .then(function(order) {
+                            node.send({ payload: order.body });
+                        });
+                });
+
+        });
+    }
 
     RED.nodes.registerType('checkout', YaasCheckout);
-
+    RED.nodes.registerType('salesorders', Salesorders);
 };
