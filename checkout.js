@@ -72,7 +72,7 @@ module.exports = function(RED) {
         node.yaasCustomerCredentials = RED.nodes.getNode(config.yaasCustomerCredentials);
         node.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
         node.status({ fill: "yellow", shape: "dot", text: "idle" });
-        node.tenant_id = config.tenant;
+        node.tenant_id = node.yaasCredentials.application_id.split(".")[0];
 
         var YaaS = require("yaas.js");
         var yaas = new YaaS();
