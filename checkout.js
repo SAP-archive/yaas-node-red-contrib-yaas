@@ -64,38 +64,33 @@ module.exports = function(RED) {
         });
 
     }
-    
+
     function Salesorders(config, orderId) {
         RED.nodes.createNode(this, config);
         var node = this;
 
+        node.yaasCustomerCredentials = RED.nodes.getNode(config.yaasCustomerCredentials);
         node.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
-        var tenant = config.tenant;
+        node.status({ fill: "yellow", shape: "dot", text: "idle" });
+        node.tenant_id = config.tenant;
 
-        node.status({ fill: "yellow", shape: "ring", text: "disconnected " + tenant });
-
-        var yaas = require("yaas.js");
+        var YaaS = require("yaas.js");
+        var yaas = new YaaS();
 
         node.on('input', function(msg) {
+            
+            yaas.init(node.yaasCredentials.client_id,
+                node.yaasCredentials.client_secret,
+                'hybris.order_read',
+                node.tenant_id)
 
-            yaas.oauth.token(
-                node.yaasCredentials.client_id, // theClientId
-                node.yaasCredentials.client_secret, // theClientSecret
-                "hybris.order_read" // theScope,
-                //node.application_id // theProjectId
-            )
-                .then(function(token) {
-                    console.log("RH: ", token.access_token,
-                        ":", msg.payload,
-                        ">", tenant); //JSON.stringify(rh));
-
-                    node.status({ fill: "green", shape: "dot", text: "verbunden" });
-                    yaas.order.salesorders_orderId(token.access_token, msg.payload, tenant)
+                .then(function() {
+                    node.status({ fill: "green", shape: "dot", text: "connected" });
+                    yaas.order.getSalesorderDetails(msg.payload)
                         .then(function(order) {
                             node.send({ payload: order.body });
                         });
                 });
-
         });
     }
 
