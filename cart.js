@@ -121,9 +121,15 @@ module.exports = function(RED) {
               coupon.amount = coupon.discountAbsolute.amount;
             }
             coupon.currency = config.currency;
+            console.log("coupon to cart", coupon);
+            node.status({fill:"green",shape:"dot",text: coupon.code});
             return yaas.cart.addDiscount(response.cartId, coupon);
           })
-          .then(console.log)
+          .then(function(response) {
+            console.log("apply discount", response);
+            node.status({fill:"yellow",shape:"dot",text: "discountId: " + response.body.discountId});
+            node.send({payload: response.body});
+          })
           .catch(function(error) {
             console.error(JSON.stringify(error));
           });

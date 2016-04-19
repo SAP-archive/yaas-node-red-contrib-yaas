@@ -17,12 +17,14 @@ module.exports = function(RED) {
             'hybris.coupon_redeem',
             node.tenant_id)
         .then(function() {
-          node.status({fill: "green", shape: "dot", text: "connected"});
           node.on("input",function(msg) {
-            console.log(msg.payload);
-            yaas.coupon.get(msg.payload)
+            var couponId = msg.payload.id || msg.payload;
+            node.status({fill: "green", shape: "dot", text: couponId});
+            console.log(couponId);
+            yaas.coupon.get(couponId)
             .then(function(response) {
               console.log(response);
+              node.status({fill: "yellow", shape: "dot", text: response.body.code + " (" + response.body.status + ")"});
               node.send({payload: response.body});
             }, console.error);
           });
@@ -75,7 +77,8 @@ module.exports = function(RED) {
             console.log(coupon);
             yaas.coupon.post(coupon)
             .then(function(response) {
-              node.send({payload: response.body.id});
+              node.status({fill: "yellow", shape: "dot", text: response.body.id});
+              node.send({payload: response.body});
             }, function(error) {
               console.error(JSON.stringify(error));
             });
