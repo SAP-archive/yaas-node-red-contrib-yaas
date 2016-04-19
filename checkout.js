@@ -85,9 +85,11 @@ module.exports = function(RED) {
                 node.tenant_id)
 
                 .then(function() {
-                    node.status({ fill: "green", shape: "dot", text: "connected" });
-                    yaas.order.getSalesorderDetails(msg.payload)
+                    var orderId = msg.payload.orderId || msg.payload;
+                    node.status({ fill: "green", shape: "dot", text: orderId });
+                    yaas.order.getSalesorderDetails(orderId)
                         .then(function(order) {
+                            console.log("order:", order);
                             node.send({ payload: order.body });
                         });
                 });
