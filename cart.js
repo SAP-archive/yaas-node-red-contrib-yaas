@@ -37,9 +37,9 @@ module.exports = function(RED) {
               return yaas.cart.addProduct(response.cartId, product, quantity, price);
             }, console.error)
             .then(function(cart){
-              console.log(JSON.stringify(cart));
-                node.send({payload:cart.cartId});
-                node.status({fill:"yellow",shape:"dot",text:"idle"});
+              console.log("cart:", JSON.stringify(cart));
+              node.send({payload:cart.body});
+              node.status({fill:"yellow",shape:"dot",text:"idle"});
             })
             .catch(function(e){
                 console.error(JSON.stringify(e));
