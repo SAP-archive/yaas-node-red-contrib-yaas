@@ -1,23 +1,23 @@
 <script type="text/javascript">
-    RED.nodes.registerType('get recommendation',{
+    RED.nodes.registerType('get configuration',{
         category: 'yaas',
         color: '#1b91e2',
         defaults: {
-            name: {value: "Get Recommendation"},
+            name: {value: "Get Configuration"},
             yaasCredentials: {type:"yaas-credentials", required:true},
             tenantId: {value: "sapevents", required: true},
         },
         inputs: 1,
         outputs: 1,
         icon: "yaas.png",
-        paletteLabel: 'get recommendation',
+        paletteLabel: 'get configuration',
         label: function() {
-            return this.name || ('get recommendation');
+            return this.name || ('get configuration');
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="get recommendation">
+<script type="text/x-red" data-template-name="get configuration">
     <div class="form-row">
         <label for="node-input-yaasCredentials"><i class="fa"></i>Credentials</label>
         <input type="text" id="node-input-yaasCredentials">
@@ -31,9 +31,9 @@
         <input type="text" id="node-input-tenantId" placeholder="Tenant ID">
     </div>
 </script>
-<script type="text/x-red" data-help-name="get recommendation">
+<script type="text/x-red" data-help-name="get configuration">
     <p>
-       Get Recommendation 
+       Get Configuration 
     </p>
 </script>
 

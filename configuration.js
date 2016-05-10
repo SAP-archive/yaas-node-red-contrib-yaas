@@ -1,9 +1,9 @@
 module.exports = function(RED) {
-    var recommenderBasePath = '/icn/recommender/v1/{{projectId}}/recommendations';
+    var configurationBasePath = '/hybris/configuration/v1/{{projectId}}/configurations/';
 
     var YaaS = require("yaas.js");
 
-    function YaasRecommendationGetNode(config) {
+    function YaasConfigurationGetNode(config) {
         RED.nodes.createNode(this, config);
         var node = this;
 
@@ -13,21 +13,15 @@ module.exports = function(RED) {
         node.status({fill: "red", shape: "ring", text: "disconnected"});
 
         var yaas = new YaaS();
-        yaas.init(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, 'ml.recommender_view', node.tenant_id)
+        yaas.init(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, 'hybris.configuration_admin', node.tenant_id)
         .then(function() {
             node.on("input",function(msg) {
                 
-                var productId = msg.payload.id || msg.payload;
+                var configurationKey = msg.payload.key || msg.payload;
                 
-                node.status({fill: "green", shape: "dot", text: productId});
+                node.status({fill: "green", shape: "dot", text: configurationKey});
 
-                var params = {
-                    sourceProductId : productId,
-                    /*userId : bla */
-                    recommendationCount : 2
-                };
-
-                yaas.requestHelper.get(recommenderBasePath, params)
+                yaas.requestHelper.get(configurationBasePath + configurationKey)
                 .then(function(response) {
                     console.log(response);
                     node.status({fill: "yellow", shape: "dot", text: response.statusCode});
@@ -39,6 +33,6 @@ module.exports = function(RED) {
         node.on('close', function() {});
     }
 
-    RED.nodes.registerType("get recommendation", YaasRecommendationGetNode);
+    RED.nodes.registerType("get configuration", YaasConfigurationGetNode);
 
 };
