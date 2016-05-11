@@ -15,8 +15,8 @@ module.exports = function(RED) {
         .then(() => {
             this.on("input", msg => {
                 var productCode = msg.payload.code || msg.payload;
-                
-                this.status({fill: "green", shape: "dot", text: "Getting recommendations for " + productCode});
+                    
+                this.status({fill: "yellow", shape: "dot", text: "Getting recommendations for " + productCode});
 
                 var params = {
                     productCode : productCode,
@@ -25,11 +25,13 @@ module.exports = function(RED) {
 
                 yaas.requestHelper.get(recommenderBasePath, params)
                 .then(response => {
-                    this.fill({fill: "green", shape: "dot", text: "Received " + response.body.length + " recommendations"});
+                    this.status({fill: "green", shape: "dot", text: "Received " + response.body.length + " recommendations"});
                     this.send({payload: response.body});
                 })
                 .catch(error => {
-                    this.fill({fill: "red", shape: "dot", text: "Error while getting recommendations for " + productCode});
+                    this.error("Error while getting recommendations for " + productCode);
+                    this.status({fill: "red", shape: "dot", text: "Error while getting recommendations for " + productCode});
+                    console.error(JSON.stringify(error));
                 });
             });
         });

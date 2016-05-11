@@ -6,7 +6,9 @@ module.exports = function(RED) {
     function missesRequirements(obj, req){
       var missing = [];
       for(var r of req){
-        if(!obj[r]) missing.push(req);
+        if(!obj[r]) {
+          missing.push(r);
+        }
       }
       return missing.length ? missing : false;
     }
@@ -35,12 +37,13 @@ module.exports = function(RED) {
             } else {
               yaas.customer.signup(msg.payload)
                 .then(response => {
-                  this.status({fill: "green", shape: "dot", text: response.body.id});
+                  this.status({fill: "green", shape: "dot", text: "Signed up as: " + response.body.id});
                   msg.payload = response.body.id;
                   this.send(msg);
                 })
                 .catch(error => {
                   this.status({fill: "red", shape: "dot", text: "error during signup"});
+                  this.error("error during singup");
                   console.error(JSON.stringify(error));
                 });
             }
@@ -79,6 +82,7 @@ module.exports = function(RED) {
                   this.send(msg);
                 })
                 .catch(error => {
+                  this.error("error during customer update");
                   this.status({fill: "red", shape: "dot", text: "error during customer update"});
                   console.error(JSON.stringify(error));
                 });
@@ -117,6 +121,7 @@ module.exports = function(RED) {
                   this.send(msg);
                 })
                 .catch(error => {
+                  this.error("error during customer address creation");
                   this.status({fill: "red", shape: "dot", text: "error during customer address creation"});
                   console.error(JSON.stringify(error));
                 });
