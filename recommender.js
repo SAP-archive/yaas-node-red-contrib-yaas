@@ -5,38 +5,34 @@ module.exports = function(RED) {
 
     function YaasRecommendationGetNode(config) {
         RED.nodes.createNode(this, config);
-        var node = this;
 
-        node.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
-        node.tenant_id = config.tenantId;
-
-        node.status({fill: "red", shape: "ring", text: "disconnected"});
+        this.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
+        this.tenant_id = config.tenantId;
+        this.status({fill: "yellow", shape: "ring", text: "idle"});
 
         var yaas = new YaaS();
-        yaas.init(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, 'ml.recommender_view', node.tenant_id)
-        .then(function() {
-            node.on("input",function(msg) {
+        yaas.init(this.yaasCredentials.client_id, this.yaasCredentials.client_secret, 'ml.recommender_view', this.tenant_id)
+        .then(() => {
+            this.on("input", msg => {
+                var productCode = msg.payload.code || msg.payload;
                 
-                var productId = msg.payload.id || msg.payload;
-                
-                node.status({fill: "green", shape: "dot", text: productId});
+                this.status({fill: "green", shape: "dot", text: "Getting recommendations for " + productCode});
 
                 var params = {
-                    sourceProductId : productId,
-                    /*userId : bla */
+                    productCode : productCode,
                     recommendationCount : 2
                 };
 
                 yaas.requestHelper.get(recommenderBasePath, params)
-                .then(function(response) {
-                    console.log(response);
-                    node.status({fill: "yellow", shape: "dot", text: response.statusCode});
-                    node.send({payload: response.body});
-                }, console.error);
+                .then(response => {
+                    this.fill({fill: "green", shape: "dot", text: "Received " + response.body.length + " recommendations"});
+                    this.send({payload: response.body});
+                })
+                .catch(error => {
+                    this.fill({fill: "red", shape: "dot", text: "Error while getting recommendations for " + productCode});
+                });
             });
         });
-
-        node.on('close', function() {});
     }
 
     RED.nodes.registerType("get recommendation", YaasRecommendationGetNode);
