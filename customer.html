@@ -1,0 +1,77 @@
+<script type="text/javascript">
+    RED.nodes.registerType('customer signup',{
+        category: 'yaas',
+        color: '#1b91e2',
+        defaults: {
+            name: {value: ""},
+            yaasCredentials: {type:"yaas-credentials", required:true},
+            tenantId: {value: "", required: true},
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "yaas.png",
+        paletteLabel: 'signup',
+        label: function() {
+            return this.name || 'signup customer';
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="customer signup">
+    <div class="form-row">
+        <label for="node-input-yaasCredentials"><i class="fa"></i> Credentials</label>
+        <input type="text" id="node-input-yaasCredentials">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-tenantId"><i class="fa fa-comments-o"></i> Tenant ID</label>
+        <input type="text" id="node-input-tenantId" placeholder="Tenant ID">
+    </div>
+</script>
+<script type="text/x-red" data-help-name="customer signup">
+    <p>
+       Customer Signup
+    </p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('update customer',{
+        category: 'yaas',
+        color: '#1b91e2',
+        defaults: {
+            name: {value: ""},
+            yaasCredentials: {type:"yaas-credentials", required:true},
+            tenantId: {value: "", required: true},
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "yaas.png",
+        paletteLabel: 'update customer',
+        label: function() {
+            return this.name || 'update customer';
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="update customer">
+    <div class="form-row">
+        <label for="node-input-yaasCredentials"><i class="fa"></i> Credentials</label>
+        <input type="text" id="node-input-yaasCredentials">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-tenantId"><i class="fa fa-comments-o"></i> Tenant ID</label>
+        <input type="text" id="node-input-tenantId" placeholder="Tenant ID">
+    </div>
+</script>
+<script type="text/x-red" data-help-name="update customer">
+    <p>
+       Update Customer
+    </p>
+</script>
