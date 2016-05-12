@@ -1,3 +1,5 @@
+var uglycart = require('./lib/UGLYCART.js');
+
 module.exports = function(RED) {
 
     var YaaS = require("yaas.js");
@@ -5,91 +7,44 @@ module.exports = function(RED) {
     function YaasAddToCart(config) {
         RED.nodes.createNode(this, config);
 
-        var node = this;
         var yaas = new YaaS();
 
-        node.yaasCustomerCredentials = RED.nodes.getNode(config.yaasCustomerCredentials);
-        node.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
-        node.status({fill:"yellow",shape:"dot",text:"idle"});
+        this.yaasCustomerCredentials = RED.nodes.getNode(config.yaasCustomerCredentials);
 
-        node.tenant_id = node.yaasCredentials.application_id.split(".")[0];
+        this.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
+        this.status({fill:"yellow",shape:"dot",text:"idle"});
 
-        node.on('input', function(msg) {
+        this.tenant_id = this.yaasCredentials.application_id.split(".")[0];
+        this.on('input', msg => {
 
+            // TODO : DE-HACK
+            var storedCustomer = this.context().flow.get('storedCustomer');
+            this.yaasCustomerCredentials = storedCustomer || this.yaasCustomerCredentials;
+            
             var productdetails = (msg.payload.constructor === Array) ? msg.payload[0] : msg.payload;
             var product = productdetails.product;
             product.images = product.media;
-
             var price = productdetails.prices[0];
-
-            node.status({fill:"green", shape:"dot", text:product.name});
-
             var quantity = Math.round(config.quantity);
 
-            yaas.init(node.yaasCredentials.client_id,
-                node.yaasCredentials.client_secret,
-                'hybris.customer_read hybris.cart_manage',
-                node.tenant_id)
-            .then(function() {
-              return getCartByCustomerEmail(yaas, node.yaasCustomerCredentials.email, config.siteCode, config.currency);
-            }, console.error)
-            .then(function(response) {
-              return yaas.cart.addProduct(response.cartId, product, quantity, price);
-            }, console.error)
-            .then(function(cart){
-              console.log("cart:", JSON.stringify(cart));
-              node.send({payload:cart.body});
-              node.status({fill:"yellow",shape:"dot",text:"idle"});
+            this.status({fill:"yellow", shape:"dot", text: "adding " +quantity + "x " + product.name + " to cart"});
+
+            yaas.init(this.yaasCredentials.client_id, this.yaasCredentials.client_secret, 'hybris.customer_read hybris.cart_manage', this.tenant_id)
+            .then(() => uglycart.getCartByCustomerEmail(yaas, this.yaasCustomerCredentials.email, config.siteCode, config.currency))
+            .then(response => yaas.cart.addProduct(response.cartId, product, quantity, price))
+            .then(cart => {
+                this.send({payload:cart.body});
+                this.status({fill:"green",shape:"dot",text:quantity + "x " + product.name + " added"});  
             })
-            .catch(function(e){
-                console.error(JSON.stringify(e));
-                node.status({fill:"red",shape:"dot",text:"error"});
+            .catch(e => {
+                console.error("addToCart", e);
+                this.error("error in addToCart");
+                this.status({fill:"red",shape:"dot", text: "error in addToCart"});
             });
         });
     }
 
     RED.nodes.registerType('add to cart', YaasAddToCart);
-
-    function getCartByCustomerId(yaas, customerId, siteCode, currency) {
-      // Get/create shopping cart
-      return new Promise(function(resolve, reject) {
-        var cart = undefined;
-        return yaas.cart.getByCriteria({
-            customerId : customerId,
-            siteCode : siteCode,
-            currency : currency
-        })
-        .then(function(response) {
-          cart = response.body;
-          cart.cartId = cart.id; // Fixing API inconsistency
-          resolve(cart);
-        })
-        .catch(function(response) {
-          if(response.statusCode === 404) {
-            console.log("Cart doesn't exist, creating it");
-            yaas.cart.create(customerId, currency, siteCode)
-            .then(function(response) {
-              cart = response.body;
-              resolve(cart);
-            }, function(response) {
-              console.error(JSON.stringify(response));
-            });
-          } else {
-            console.error(JSON.stringify(response));
-            reject();
-          }
-        });
-      });
-    }
-
-    function getCartByCustomerEmail(yaas, customerEmail, siteCode, currency) {
-      return yaas.customer.getCustomers({q: 'contactEmail:"' + customerEmail + '"'})
-        .then(function(response) {
-          var customer = response.body[0];
-          var customerId = customer.customerNumber;
-          return getCartByCustomerId(yaas, customerId, siteCode, currency)
-        })
-    }
 
     function YaasApplyDiscount(config) {
         RED.nodes.createNode(this, config);
@@ -110,7 +65,7 @@ module.exports = function(RED) {
               'hybris.customer_read hybris.cart_manage',
               node.tenant_id)
           .then(function() {
-            return getCartByCustomerEmail(yaas, node.yaasCustomerCredentials.email, config.siteCode, config.currency);
+            return uglycart.getCartByCustomerEmail(yaas, node.yaasCustomerCredentials.email, config.siteCode, config.currency);
           })
           .then(function(response) {
             var coupon = msg.payload;

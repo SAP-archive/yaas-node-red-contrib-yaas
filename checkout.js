@@ -1,33 +1,74 @@
 module.exports = function(RED) {
-   
-    var request = require('request');
-    var oauth2 = require('./lib/oauth2.js');
-    var cart = require('./lib/cart.js');
-    var customer = require('./lib/customer.js');
-    var checkout = require('./lib/checkout.js');
+
+    var uglycart = require('./lib/UGLYCART.js');
+    var YaaS = require("yaas.js");
+
     var payment = require('./lib/payment.js');
 
-    function YaasCheckout(config) {
-
+    function YaasCheckoutNode(config) {
         RED.nodes.createNode(this, config);
-        var node = this;
 
-        node.yaasCustomerCredentials = RED.nodes.getNode(config.yaasCustomerCredentials);
-        node.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
-        node.stripeCredentials = RED.nodes.getNode(config.stripeCredentials);
+        var yaas = new YaaS();
 
-        node.status({fill:"yellow",shape:"dot",text:"idle"});
+        this.yaasCustomerCredentials =  RED.nodes.getNode(config.yaasCustomerCredentials);
 
-        node.on('input', function(msg) {
-            var currency = config.currency;
-            var siteCode = config.siteCode;
-            var customerToken;
-            var customerVar;
-            var cartId = msg.payload;
+        this.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
+        this.stripeCredentials = RED.nodes.getNode(config.stripeCredentials);
+        this.tenant_id = this.yaasCredentials.application_id.split(".")[0];
 
-            var authData;
+        this.currency = config.currency;
+        this.siteCode = config.siteCode;
 
-            node.status({fill:"green",shape:"dot",text:"placing order"});
+        this.status({fill:"yellow",shape:"dot",text:"idle"});
+
+        this.on('input', msg => {
+            var email = msg.payload || yaasCustomerCredentials.email;
+            var cartId;
+            var customer;
+            var addresses;
+
+            yaas.init(this.yaasCredentials.client_id, this.yaasCredentials.client_secret, 'hybris.checkout_manage hybris.customer_read hybris.cart_manage', this.tenant_id)
+            .then(() => yaas.customer.getCustomers({q: 'contactEmail:"' + email + '"', expand: 'addresses'}))
+            .then(response => {
+                customer = response.body[0];
+                customer.email = email; // TODO: uuh wow nice inconsistency here
+
+                addresses = customer.addresses;
+                delete customer.addresses;
+
+                addresses.push(Object.assign({}, addresses[0]));
+                addresses[0].type = "BILLING";
+                addresses[1].type = "SHIPPING";
+
+                this.status({fill:"yellow", shape:"dot", text: "got customer with id " + customer.customerNumber});
+                return uglycart.getCartByCustomerId(yaas, customer.customerNumber, this.siteCode, this.currency);
+            })
+            .then(cart => {
+                cartId = cart.cartId;
+                this.status({fill:"yellow", shape:"dot", text: "got cart id " + cartId});
+                return payment.getToken(this.stripeCredentials);
+            })
+            .then(stripeToken => {
+                this.status({fill:"yellow", shape:"dot", text: "got stripe token " + stripeToken});
+                var obj = {
+                    payment : {
+                        paymentId : "stripe",
+                        customAttributes : {
+                            token : stripeToken
+                        }
+                    },
+                    cartId : cartId,
+                    customer : customer,
+                    addresses : addresses,
+                    currency : this.currency,
+                    siteCode : this.siteCode
+                };
+                console.log(obj);
+                return yaas.checkout.checkout(obj);
+            })
+            .then(response => console.log("checkout", response))
+            .catch(error => console.error(error.body));
+            /*
 
             oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, [])
             .then(function(data) {
@@ -61,10 +102,14 @@ module.exports = function(RED) {
                 node.status({fill:"yellow",shape:"dot",text:order.orderId});
                 node.log("Order placed: " + order.orderId);
             }, console.error);
+            */
         });
-
     }
+    RED.nodes.registerType('checkout', YaasCheckoutNode);
 
+
+
+    // TODO: AAAHH WAS IST DAS
     function Salesorders(config, orderId) {
         RED.nodes.createNode(this, config);
         var node = this;
@@ -96,6 +141,5 @@ module.exports = function(RED) {
         });
     }
 
-    RED.nodes.registerType('checkout', YaasCheckout);
     RED.nodes.registerType('salesorders', Salesorders);
 };
