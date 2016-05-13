@@ -113,7 +113,6 @@ module.exports = function(RED) {
             } else {
               var customerNumber = msg.payload.customerNumber;
               delete msg.payload.customerNumber;
-              console.log("hier", msg.payload);
               yaas.customer.createCustomerAddress(customerNumber, msg.payload)
                 .then(response => {
                   this.status({fill: "green", shape: "dot", text: "New address for customer " + customerNumber + " created"});
