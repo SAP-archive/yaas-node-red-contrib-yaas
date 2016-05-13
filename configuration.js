@@ -23,7 +23,6 @@ module.exports = function(RED) {
 
                 yaas.requestHelper.get(configurationBasePath + configurationKey)
                 .then(function(response) {
-                    console.log(response);
                     node.status({fill: "yellow", shape: "dot", text: response.statusCode});
                     node.send({payload: response.body});
                 }, console.error);

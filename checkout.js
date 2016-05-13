@@ -33,10 +33,12 @@ module.exports = function(RED) {
                 customer = response.body[0];
                 customer.email = email; // TODO: uuh wow nice inconsistency here
 
-                addresses = customer.addresses;
+                addresses = [
+                    Object.assign({}, customer.addresses[0]),
+                    customer.addresses.length > 1 ? Object.assign({}, customer.addresses[1]) : Object.assign({}, customer.addresses[0])
+                ];
                 delete customer.addresses;
 
-                addresses.push(Object.assign({}, addresses[0]));
                 addresses[0].type = "BILLING";
                 addresses[1].type = "SHIPPING";
 
@@ -63,46 +65,16 @@ module.exports = function(RED) {
                     currency : this.currency,
                     siteCode : this.siteCode
                 };
-                console.log(obj);
                 return yaas.checkout.checkout(obj);
             })
-            .then(response => console.log("checkout", response))
-            .catch(error => console.error(error.body));
-            /*
-
-            oauth2.getClientCredentialsToken(node.yaasCredentials.client_id, node.yaasCredentials.client_secret, [])
-            .then(function(data) {
-                authData = data;
-                return customer.login(authData.tenant, authData.access_token,
-                    node.yaasCustomerCredentials.email,
-                    node.yaasCustomerCredentials.password);
-            }, console.error)
-            .then(function(token){
-                console.log('checkout got customer token: ' + token);
-                customerToken = token;
-                return customer.me(authData.tenant, customerToken);
-            }, console.error)
-            .then(function(cust){
-                customerVar = cust;
-                console.log('checkout got customer id:  ' + customerVar.customerNumber); 
-                return cart.getCartOrCreateForCustomer(authData.tenant, customerToken, customerVar.customerNumber, siteCode, currency);
-            }, console.error)
-            .then(function(cId){
-                cartId = cId;
-                console.log('checkout got cart id: ' + cartId);
-                return payment.getToken(node.stripeCredentials);
-            }, console.error)
-            .then(function(stripeToken) {
-                console.log("checkout got stripe token: " + stripeToken);
-                node.status({fill:"green",shape:"dot",text:"Stripe"});
-                return checkout.checkoutCart(customerToken, authData.tenant, cartId, customerVar, stripeToken);
-            }, console.error)
-            .then(function(order){
-                console.log(order);
-                node.status({fill:"yellow",shape:"dot",text:order.orderId});
-                node.log("Order placed: " + order.orderId);
-            }, console.error);
-            */
+            .then(response => {
+                this.send({payload : response.body.orderId});
+                this.status({fill:"green", shape:"dot", text: "order created: " + response.body.orderId});
+            })
+            .catch(error => {
+                this.status({fill:"red", shape:"dot", text: "error: " + error.body.details[0].message});
+                console.error(error.body);
+            });
         });
     }
     RED.nodes.registerType('checkout', YaasCheckoutNode);

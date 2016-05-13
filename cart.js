@@ -20,7 +20,7 @@ module.exports = function(RED) {
             // TODO : DE-HACK
             var storedCustomer = this.context().flow.get('storedCustomer');
             this.yaasCustomerCredentials = storedCustomer || this.yaasCustomerCredentials;
-            
+
             var productdetails = (msg.payload.constructor === Array) ? msg.payload[0] : msg.payload;
             var product = productdetails.product;
             product.images = product.media;
@@ -76,12 +76,10 @@ module.exports = function(RED) {
               coupon.amount = coupon.discountAbsolute.amount;
             }
             coupon.currency = config.currency;
-            console.log("coupon to cart", coupon);
             node.status({fill:"green",shape:"dot",text: coupon.code});
             return yaas.cart.addDiscount(response.cartId, coupon);
           })
           .then(function(response) {
-            console.log("apply discount", response);
             node.status({fill:"yellow",shape:"dot",text: "discountId: " + response.body.discountId});
             node.send({payload: response.body});
           })
