@@ -72,8 +72,8 @@ module.exports = function(RED) {
                 this.status({fill:"green", shape:"dot", text: "order created: " + response.body.orderId});
             })
             .catch(error => {
-                this.status({fill:"red", shape:"dot", text: "error: " + error.body.details[0].message});
-                console.error(error.body);
+                this.status({fill:"red", shape:"dot", text: "error: " + error.body.details[0].message || error});
+                console.error(error.body || error);
             });
         });
     }
