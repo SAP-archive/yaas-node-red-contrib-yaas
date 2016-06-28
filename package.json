@@ -1,7 +1,7 @@
 {
   "name": "node-red-contrib-yaas",
   "version": "1.0.0",
-  "description": "",
+  "description": "Node-RED contrib for YaaS.",
   "repository": {
     "type": "git",
     "url": "ssh://git@enterprise-stash.hybris.com:7999/labs/node-red-contrib-yaas.git"
@@ -23,7 +23,7 @@
     "email": "labs@hybris.com",
     "url": "https://labs.hybris.com"
   },
-  "license": "Apache License 2.0",
+  "license": "Apache-2.0",
   "dependencies": {
     "request": "^2.65.0",
     "stripe": "^4.0.0",
