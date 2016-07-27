@@ -15,7 +15,14 @@
   "node-red": {
     "nodes": {
       "pubsub": "pubsub.js",
-      "document": "document.js"
+      "document": "document.js",
+      "cart": "cart.js",
+      "coupon": "coupon.js",
+      "recommender": "recommender.js",
+      "checkout": "checkout.js",
+      "productdetails" : "productdetails.js",
+      "configuration": "configuration.js",
+      "customer" : "customer.js"
     }
   },
   "author": {
