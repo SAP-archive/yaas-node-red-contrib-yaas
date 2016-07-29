@@ -22,7 +22,8 @@
       "checkout": "checkout.js",
       "productdetails" : "productdetails.js",
       "configuration": "configuration.js",
-      "customer" : "customer.js"
+      "customer" : "customer.js",
+      "credentials" : "credentials.js"
     }
   },
   "author": {
