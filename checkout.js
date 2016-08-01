@@ -22,7 +22,7 @@ module.exports = function(RED) {
         this.status({fill:"yellow",shape:"dot",text:"idle"});
 
         this.on('input', msg => {
-            var email = msg.payload || yaasCustomerCredentials.email;
+            var email = msg.payload || this.yaasCustomerCredentials.email;
             var cartId;
             var customer;
             var addresses;

@@ -14,16 +14,17 @@
   ],
   "node-red": {
     "nodes": {
-      "pubsub": "pubsub.js",
-      "document": "document.js",
-      "cart": "cart.js",
-      "coupon": "coupon.js",
-      "recommender": "recommender.js",
-      "checkout": "checkout.js",
-      "productdetails" : "productdetails.js",
-      "configuration": "configuration.js",
+      "cart" : "cart.js",
+      "checkout" : "checkout.js",
+      "configuration" : "configuration.js",
+      "coupon" : "coupon.js",
+      "credentials" : "credentials.js",
       "customer" : "customer.js",
-      "credentials" : "credentials.js"
+      "document" : "document.js",
+      "productdetails" : "productdetails.js",
+      "pubsub" : "pubsub.js",
+      "recommender" : "recommender.js",
+      "stripecredentials" : "stripecredentials.js"
     }
   },
   "author": {
