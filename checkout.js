@@ -22,7 +22,12 @@ module.exports = function(RED) {
         this.status({fill:"yellow",shape:"dot",text:"idle"});
 
         this.on('input', msg => {
-            var email = msg.payload || this.yaasCustomerCredentials.email;
+            var email = this.yaasCustomerCredentials.email;
+            var inputEmail = "" + msg.payload;
+            if (inputEmail.indexOf('@') > 0) {
+                // the input seems to be an email (and not a twitter account)
+                email = inputEmail;
+            }
             var cartId;
             var customer;
             var addresses;

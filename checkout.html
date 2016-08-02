@@ -43,7 +43,12 @@
 </script>
 <script type="text/x-red" data-help-name="checkout">
     <p>
-       Checkout a cart
+        The Checkout node checks out a shopping cart, of a defined Customer. Therefore the Customer, YaaS and Stripe Credentials have to be defined for this node.
+    <p>
+        It is also possible to send the Customer Id (email address) as input (<code>msg.payload</code>). In this case the defined Customer will be ignored.
+    </p>
+    <p>
+        The node returns the Order Id as text in the <code>msg.payload</code>.
     </p>
 </script>
 
