@@ -14,17 +14,17 @@
   ],
   "node-red": {
     "nodes": {
-      "cart" : "cart.js",
-      "checkout" : "checkout.js",
-      "configuration" : "configuration.js",
-      "coupon" : "coupon.js",
-      "credentials" : "credentials.js",
-      "customer" : "customer.js",
-      "document" : "document.js",
-      "productdetails" : "productdetails.js",
-      "pubsub" : "pubsub.js",
-      "recommender" : "recommender.js",
-      "stripecredentials" : "stripecredentials.js"
+      "cart": "cart.js",
+      "checkout": "checkout.js",
+      "configuration": "configuration.js",
+      "coupon": "coupon.js",
+      "credentials": "credentials.js",
+      "customer": "customer.js",
+      "document": "document.js",
+      "productdetails": "productdetails.js",
+      "pubsub": "pubsub.js",
+      "recommender": "recommender.js",
+      "stripecredentials": "stripecredentials.js"
     }
   },
   "author": {
@@ -33,14 +33,20 @@
     "url": "https://labs.hybris.com"
   },
   "license": "Apache-2.0",
+  "scripts": {
+    "test": "node_modules/.bin/mocha",
+    "lint": "jshint"
+  },
   "dependencies": {
     "request": "^2.65.0",
     "stripe": "^4.0.0",
     "underscore": "^1.8.3",
-    "yaas.js": "0.1.2"
+    "yaas.js": "^0.1.2"
   },
   "devDependencies": {
-    "jshint": "~2"
+    "jshint": "~2",
+    "mocha": "^3.0.1",
+    "should": "^10.0.0"
   },
   "jshintConfig": {
     "esversion": 6

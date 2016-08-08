@@ -1,6 +1,5 @@
 module.exports = function(RED) {
    
-    var request = require('request');
     var oauth2 = require('./lib/oauth2.js');
     var productdetails = require('./lib/productdetails.js');
 
@@ -18,9 +17,9 @@ module.exports = function(RED) {
             .then(function(authData) {
                 return productdetails.getDetailsByID(authData.tenant, authData.access_token, msg.payload, config.currency);
             })
-            .then(function(body){
-                node.send({payload:body});
-                node.status({fill:"yellow",shape:"dot",text:body.product.name});
+            .then(function(result){
+                node.send({payload:result});
+                node.status({fill:"yellow",shape:"dot",text:result.product.name});
             })
             .catch(function(e){
                 console.error(e);
@@ -51,5 +50,4 @@ module.exports = function(RED) {
 
     RED.nodes.registerType('get product details by ID', YaasProductDetailsByIDNode);
     RED.nodes.registerType('get product details by query', YaasProductDetailsByQueryNode);
-
 };
