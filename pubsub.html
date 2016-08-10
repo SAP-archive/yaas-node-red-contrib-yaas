@@ -5,9 +5,10 @@
         defaults: {
             name: {value:""},
             yaasCredentials: {type:"yaas-credentials", required:true},
-            topic : {value:"button_pressed", required:true},
-            interval : {value:500, required:false},
-            application_id : {value:"", required:false},
+            event_type : {value:"order.order-created", required:true},
+            interval : {value:1000},
+            number_of_events: {value:1},
+            topic_owner_client : {value:"hybris"},
             auto_commit : {value:true, required:true}
         },
         inputs:0,
@@ -15,12 +16,10 @@
         icon: "yaas.png",
         paletteLabel : 'pubsub',
         label: function() {
-            if(!this.str){
-                setTimeout(function(){
-                    if(this.yaasCredentials){
-                        this.str = RED.nodes.node(this.yaasCredentials).application_id + '/' + this.topic;
-                    }
-                }.bind(this), 10);
+            if (this.topic_owner_client) {
+                this.str = this.topic_owner_client + '.' + this.event_type;
+            } else if (this.yaasCredentials) {
+                this.str = RED.nodes.node(this.yaasCredentials).application_id + '.' + this.event_type;
             }
             return this.name || this.str;
         }
@@ -37,16 +36,20 @@
         <input type="text" id="node-input-yaasCredentials">
     </div> 
     <div class="form-row">
-        <label for="node-input-topic"><i class="fa fa-comments-o"></i> Topic</label>
-        <input type="text" id="node-input-topic" placeholder="Topic">
+        <label for="node-input-topic_owner_client"><i class="fa fa-comments-o"></i> Topic Owner Client</label>
+        <input type="text" id="node-input-topic_owner_client" placeholder="Application Id / Identifier (optional)">
     </div>
     <div class="form-row">
-        <label for="node-input-application_id"><i class="fa fa-comments-o"></i> Application ID (Optional)</label>
-        <input type="text" id="node-input-application_id" placeholder="">
+        <label for="node-input-event_type"><i class="fa fa-comments-o"></i> Event Type</label>
+        <input type="text" id="node-input-event_type" placeholder="Event Type">
+    </div>
+    <div class="form-row">
+        <label for="node-input-number_of_events"><i class="fa"></i> Number of Events</label>
+        <input type="number" id="node-input-number_of_events" placeholder="default: 1">
     </div>
     <div class="form-row">
         <label for="node-input-interval"><i class="fa fa-comments-o"></i> Interval</label>
-        <input type="number" id="node-input-interval" placeholder="500">
+        <input type="number" id="node-input-interval" placeholder="interval in ms">
     </div>
     <div class="form-row">
         <label for="node-input-auto_commit"><i class="fa"></i> Auto Commit</label>
@@ -66,7 +69,7 @@
         defaults: {
             name: {value:""},
             yaasCredentials: {type:"yaas-credentials", required:true},
-            topic : {value:"button_pressed", required:true}
+            event_type : {value:"", required:true}
         },
         inputs:1,
         outputs:0,
@@ -74,7 +77,10 @@
         align : "right",
         paletteLabel : 'pubsub',
         label: function() {
-            return this.name || this.topic;
+            if (this.yaasCredentials) {
+                this.str = RED.nodes.node(this.yaasCredentials).application_id + '.' + this.event_type;
+            }
+            return this.name || this.str;
         }
     });
 </script>
@@ -83,15 +89,15 @@
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
-    </div>      
+    </div>
     <div class="form-row">
         <label for="node-input-yaasCredentials"><i class="fa"></i> Credentials</label>
         <input type="text" id="node-input-yaasCredentials">
-    </div> 
+    </div>
     <div class="form-row">
-        <label for="node-input-topic"><i class="fa fa-comments-o"></i> Topic</label>
-        <input type="text" id="node-input-topic" placeholder="Topic">
-    </div>   
+        <label for="node-input-event_type"><i class="fa fa-comments-o"></i> Event Type</label>
+        <input type="text" id="node-input-event_type" placeholder="Topic">
+    </div>
                                 
 </script>
 <script type="text/x-red" data-help-name="publish">
@@ -107,7 +113,7 @@
         defaults: {
             name: {value:""},
             yaasCredentials: {type:"yaas-credentials", required:true},
-            topic : {value:"button_pressed", required:true}
+            event_type : {value:"button_pressed", required:true}
         },
         inputs:1,
         outputs:0,
@@ -115,7 +121,10 @@
         align : "right",
         paletteLabel : 'pubsub commit',
         label: function() {
-            return this.name || this.topic;
+            if (this.yaasCredentials) {
+                this.str = RED.nodes.node(this.yaasCredentials).application_id + '.' + this.event_type;
+            }
+            return this.name || this.str;
         }
     });
 </script>
@@ -130,10 +139,9 @@
         <input type="text" id="node-input-yaasCredentials">
     </div>
     <div class="form-row">
-        <label for="node-input-topic"><i class="fa fa-comments-o"></i> Topic</label>
-        <input type="text" id="node-input-topic" placeholder="Topic">
+        <label for="node-input-topic"><i class="fa fa-comments-o"></i> Event Type</label>
+        <input type="text" id="node-input-event_type" placeholder="Event Type">
     </div>
-
 </script>
 <script type="text/x-red" data-help-name="commit">
     <p>
