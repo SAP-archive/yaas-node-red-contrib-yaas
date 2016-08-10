@@ -27,11 +27,16 @@ Requirements
 ------------
 
 * Node-RED latest version
-* yaas.js: https://github.com/SAP/yaas-nodejs-client-sdk
 * Node.js 4.x and later, supporting ECMAScript 6 features like Promises
 * A YaaS account: https://www.yaas.io/
 * A configured YaaS project and application, for required OAuth2 credentials
 
+Documentation and examples
+--------------------------
+
+Blog posts:
+* [How to use YaaS with Node-RED](https://labs.hybris.com/2016/08/08/use-yaas-with-node-red/)
+* [Triggering and checkout with Node-RED and YaaS](http://labs.hybris.com/2016/08/09/triggering-checkout-node-red-yaas/)
 
 How to contact us
 -----------------
