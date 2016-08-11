@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('subscribe',{
+    RED.nodes.registerType('pubsub_read',{
         category: 'yaas',
         color: '#1b91e2',
         defaults: {
@@ -14,7 +14,7 @@
         inputs:0,
         outputs:1,
         icon: "yaas.png",
-        paletteLabel : 'pubsub',
+        paletteLabel : 'pubsub read',
         label: function() {
             if (this.topic_owner_client) {
                 this.str = this.topic_owner_client + '.' + this.event_type;
@@ -26,7 +26,7 @@
     });
 </script>
 
-<script type="text/x-red" data-template-name="subscribe">
+<script type="text/x-red" data-template-name="pubsub_read">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -56,7 +56,7 @@
         <input type="checkbox" id="node-input-auto_commit">
     </div>
 </script>
-<script type="text/x-red" data-help-name="subscribe">
+<script type="text/x-red" data-help-name="pubsub_read">
     <p>
        Subscribe to PubSub to <b>read</b> events from the configured <i>Event Type</i>.
     </p>
@@ -69,7 +69,7 @@
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('publish',{
+    RED.nodes.registerType('pubsub_publish',{
         category: 'yaas',
         color: '#1b91e2',
         defaults: {
@@ -81,7 +81,7 @@
         outputs:0,
         icon: "yaas.png",
         align : "right",
-        paletteLabel : 'pubsub',
+        paletteLabel : 'pubsub publish',
         label: function() {
             if (this.yaasCredentials) {
                 this.str = RED.nodes.node(this.yaasCredentials).application_id + '.' + this.event_type;
@@ -91,7 +91,7 @@
     });
 </script>
 
-<script type="text/x-red" data-template-name="publish">   
+<script type="text/x-red" data-template-name="pubsub_publish">   
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -106,7 +106,7 @@
     </div>
                                 
 </script>
-<script type="text/x-red" data-help-name="publish">
+<script type="text/x-red" data-help-name="pubsub_publish">
     <p>
        Publish an event to the configured <i>Event Type</i>.
        The <i>Application ID</i> from the <i>YaaS Credentials</i> is used as <i>Topic Owner Client</i> for the PubSub <b>publish</b> event.
@@ -117,7 +117,7 @@
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('commit',{
+    RED.nodes.registerType('pubsub_commit',{
         category: 'yaas',
         color: '#1b91e2',
         defaults: {
@@ -139,7 +139,7 @@
     });
 </script>
 
-<script type="text/x-red" data-template-name="commit">
+<script type="text/x-red" data-template-name="pubsub_commit">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -153,7 +153,7 @@
         <input type="text" id="node-input-event_type" placeholder="Event Type">
     </div>
 </script>
-<script type="text/x-red" data-help-name="commit">
+<script type="text/x-red" data-help-name="pubsub_commit">
     <p>
        Events which are not committed are redelivered after the defined time. This node <b>commit</b>s this configured <i>Event Type<i>.
     </p>

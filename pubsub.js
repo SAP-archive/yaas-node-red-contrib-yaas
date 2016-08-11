@@ -23,7 +23,7 @@ module.exports = function(RED) {
       return str;
     };
 
-    function YaasPubsubSubscribeNode(config) {
+    function YaasPubsubReadNode(config) {
         RED.nodes.createNode(this, config);
         var node = this;
 
@@ -70,21 +70,20 @@ module.exports = function(RED) {
                     }
                 }, function(err) {
                     node.status({fill:"red",shape:"dot",text:"error: " + err});
-                    //node.send({error: err});
-                    console.log('ERROR pubsub:', err);
+                    console.error('ERROR pubsub read:', err);
                 });
 
             }, node.interval);
 
         }, console.log);
+
         node.on('close', function() {
             if (node.intervalID) {
                 clearInterval(node.intervalID);
             }
         });
     }
-
-    RED.nodes.registerType("subscribe",YaasPubsubSubscribeNode);
+    RED.nodes.registerType("pubsub_read",YaasPubsubReadNode);
 
     function YaasPubsubPublishNode(config) {
         RED.nodes.createNode(this, config);
@@ -132,13 +131,8 @@ module.exports = function(RED) {
 
             node.status({fill:"green",shape:"dot",text:"ready"});  
         });
-
-        node.on('close', function() {
-            // close 
-        });
     }
-
-    RED.nodes.registerType("publish",YaasPubsubPublishNode);
+    RED.nodes.registerType("pubsub_publish",YaasPubsubPublishNode);
 
     function YaasPubsubCommitNode(config) {
         RED.nodes.createNode(this, config);
@@ -167,14 +161,12 @@ module.exports = function(RED) {
                 yaas.pubsub.commit(node.application_id, node.event_type, msg.token)
                 .then(function(){
                   node.log("Message committed:", msg.token);
-                }, console.log);
+                }, function(err) {
+                    node.status({fill:"red",shape:"dot",text:"error: " + err});
+                    console.error('ERROR pubsub commit:', err);
+                });
             });
-
-        });
-
-        node.on('close', function() {
-            // close
         });
     }
-    RED.nodes.registerType("commit",YaasPubsubCommitNode);
+    RED.nodes.registerType("pubsub_commit",YaasPubsubCommitNode);
 };
