@@ -32,7 +32,7 @@
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
     <div class="form-row">
-        <label for="node-input-yaasCredentials"><i class="fa"></i> Credentials</label>
+        <label for="node-input-yaasCredentials"><i class="fa"></i> YaaS Credentials</label>
         <input type="text" id="node-input-yaasCredentials">
     </div> 
     <div class="form-row">
@@ -58,7 +58,13 @@
 </script>
 <script type="text/x-red" data-help-name="subscribe">
     <p>
-       Subscribe
+       Subscribe to PubSub to <b>read</b> events from the configured <i>Event Type</i>.
+    </p>
+    <p>
+       If no <i>Topic Owner Client</i> is defined, the <i>Application ID</i> from the <i>YaaS Credentials</i> is used.
+    </p>
+    <p>
+       See also <a href="https://devportal.yaas.io/services/pubsub/latest/index.html" target="_blank">PubSub documentation</a>.
     </p>
 </script>
 
@@ -102,7 +108,11 @@
 </script>
 <script type="text/x-red" data-help-name="publish">
     <p>
-       Publish
+       Publish an event to the configured <i>Event Type</i>.
+       The <i>Application ID</i> from the <i>YaaS Credentials</i> is used as <i>Topic Owner Client</i> for the PubSub <b>publish</b> event.
+    </p>
+    <p>
+       See also <a href="https://devportal.yaas.io/services/pubsub/latest/index.html" target="_blank">PubSub documentation</a>.
     </p>
 </script>
 
@@ -145,6 +155,12 @@
 </script>
 <script type="text/x-red" data-help-name="commit">
     <p>
-       Commit, needs input from <code>pubsub (no commit)</code>
+       Events which are not committed are redelivered after the defined time. This node <b>commit</b>s this configured <i>Event Type<i>.
+    </p>
+    <p>
+       Note: needs input from <code>pubsub (no commit)</code>
+    </p>
+    <p>
+       See also <a href="https://devportal.yaas.io/services/pubsub/latest/index.html" target="_blank">PubSub documentation</a>.
     </p>
 </script>
