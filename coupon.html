@@ -7,13 +7,13 @@
             name: {value: "Create Coupon"},
             yaasCredentials: {type:"yaas-credentials", required:true},
             couponType: {value: "PERCENT", required: true},
-            tenantId: {value: "iotworkshop", required: true},
+            tenantId: {value: ""},
             currency: {value: "USD", required: true}
         },
         inputs: 1,
         outputs: 1,
         icon: "yaas.png",
-        paletteLabel: 'create coupon',
+        paletteLabel: 'coupon create',
         label: function() {
             return this.name || ('create coupon');
         }
@@ -41,12 +41,15 @@
     </div>
     <div class="form-row">
         <label for="node-input-tenantId"><i class="fa fa-comments-o"></i>Tenant ID</label>
-        <input type="text" id="node-input-tenantId" placeholder="Tenant ID">
+        <input type="text" id="node-input-tenantId" placeholder="Tenant ID (optional)">
     </div>
 </script>
 <script type="text/x-red" data-help-name="create coupon">
     <p>
        Create Coupon
+    </p>
+    <p>
+       If the <i>Tenant ID</i> is empty, the tenant Id from the Application Id (YaaS Credentials) is used.
     </p>
 </script>
 
@@ -57,12 +60,12 @@
         defaults: {
             name: {value: "Get Coupon"},
             yaasCredentials: {type:"yaas-credentials", required:true},
-            tenantId: {value: "iotworkshop", required: true},
+            tenantId: {value: ""},
         },
         inputs: 1,
         outputs: 1,
         icon: "yaas.png",
-        paletteLabel: 'get coupon',
+        paletteLabel: 'coupon get',
         label: function() {
             return this.name || ('get coupon');
         }
@@ -79,7 +82,7 @@
     </div>
     <div class="form-row">
         <label for="node-input-tenantId"><i class="fa fa-comments-o"></i>Tenant ID</label>
-        <input type="text" id="node-input-tenantId" placeholder="Tenant ID">
+        <input type="text" id="node-input-tenantId" placeholder="Tenant ID (optional)">
     </div>
 </script>
 <script type="text/x-red" data-help-name="get">
