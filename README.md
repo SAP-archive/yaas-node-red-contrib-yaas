@@ -38,6 +38,7 @@ Blog posts:
 * [How to use YaaS with Node-RED](https://labs.hybris.com/2016/08/08/use-yaas-with-node-red/)
 * [Triggering and checkout with Node-RED and YaaS](http://labs.hybris.com/2016/08/09/triggering-checkout-node-red-yaas/)
 * [Order created](http://labs.hybris.com/2016/08/11/order-created/)
+* [14% OFF – Coupons with Node-RED](https://labs.hybris.com/2016/08/12/14-off-coupons-node-red/)
 
 How to contact us
 -----------------
