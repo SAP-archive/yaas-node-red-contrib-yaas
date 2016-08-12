@@ -4,7 +4,7 @@ var should = require('should');
 describe('Helper', function () {
 
     describe('tenant Id from applicationId', function () {
-        it('tenantId should be a function', function() {
+        it('tenantId should be a function', function () {
             helper.tenantId.should.be.a.Function;
         });
 
