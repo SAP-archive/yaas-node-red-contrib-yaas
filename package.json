@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-yaas",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Node-RED contrib for YaaS (SAP Hybris as a Service).",
   "repository": {
     "type": "git",
