@@ -1,42 +1,3 @@
-<script type="text/javascript">
-    RED.nodes.registerType('get',{
-        category: 'yaas',
-        color: '#1b91e2',
-        defaults: {
-            name: {value: "Get Coupon"},
-            yaasCredentials: {type:"yaas-credentials", required:true},
-            tenantId: {value: "iotworkshop", required: true},
-        },
-        inputs: 1,
-        outputs: 1,
-        icon: "yaas.png",
-        paletteLabel: 'get coupon',
-        label: function() {
-            return this.name || ('get coupon');
-        }
-    });
-</script>
-
-<script type="text/x-red" data-template-name="get">
-    <div class="form-row">
-        <label for="node-input-yaasCredentials"><i class="fa"></i>Credentials</label>
-        <input type="text" id="node-input-yaasCredentials">
-    </div>
-    <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i>Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
-    </div>
-    <div class="form-row">
-        <label for="node-input-tenantId"><i class="fa fa-comments-o"></i>Tenant ID</label>
-        <input type="text" id="node-input-tenantId" placeholder="Tenant ID">
-    </div>
-</script>
-<script type="text/x-red" data-help-name="get">
-    <p>
-       Get Coupon
-    </p>
-</script>
-
 <!-- Create Coupon -->
 <script type="text/javascript">
     RED.nodes.registerType('create coupon',{
@@ -58,7 +19,6 @@
         }
     });
 </script>
-
 <script type="text/x-red" data-template-name="create coupon">
     <div class="form-row">
         <label for="node-input-yaasCredentials"><i class="fa"></i>Credentials</label>
@@ -87,5 +47,43 @@
 <script type="text/x-red" data-help-name="create coupon">
     <p>
        Create Coupon
+    </p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('get',{
+        category: 'yaas',
+        color: '#1b91e2',
+        defaults: {
+            name: {value: "Get Coupon"},
+            yaasCredentials: {type:"yaas-credentials", required:true},
+            tenantId: {value: "iotworkshop", required: true},
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "yaas.png",
+        paletteLabel: 'get coupon',
+        label: function() {
+            return this.name || ('get coupon');
+        }
+    });
+</script>
+<script type="text/x-red" data-template-name="get">
+    <div class="form-row">
+        <label for="node-input-yaasCredentials"><i class="fa"></i>Credentials</label>
+        <input type="text" id="node-input-yaasCredentials">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i>Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-tenantId"><i class="fa fa-comments-o"></i>Tenant ID</label>
+        <input type="text" id="node-input-tenantId" placeholder="Tenant ID">
+    </div>
+</script>
+<script type="text/x-red" data-help-name="get">
+    <p>
+       Get Coupon
     </p>
 </script>
