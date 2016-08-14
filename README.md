@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/SAP/yaas-node-red-contrib-yaas.svg?branch=master)](https://travis-ci.org/SAP/yaas-node-red-contrib-yaas)
+[![Dependency status](https://img.shields.io/david/SAP/yaas-node-red-contrib-yaas.svg)](https://david-dm.org/SAP/yaas-node-red-contrib-yaas)
+
+
 node-red-contrib-yaas
 =====================
 
