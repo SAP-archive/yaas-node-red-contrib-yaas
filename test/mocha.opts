@@ -3,5 +3,4 @@
 --ui bdd
 --recursive
 --inline-diffs
---timeout 5000
 --slow 2000
