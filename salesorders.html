@@ -1,0 +1,28 @@
+<script type="text/javascript">
+    RED.nodes.registerType('salesorders',{
+        category: 'yaas',
+        color: '#1b91e2',
+        defaults: {
+            yaasCredentials: {type:"yaas-credentials", required:true}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "yaas.png",
+        paletteLabel: 'salesorders',
+        label: function() {
+            return 'salesorders';
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="salesorders">
+    <div class="form-row">
+        <label for="node-input-yaasCredentials"><i class="fa fa-user-secret"></i> Credentials</label>
+        <input type="text" id="node-input-yaasCredentials">
+    </div>
+</script>
+<script type="text/x-red" data-help-name="salesorders">
+    <p>
+       Sales Order
+    </p>
+</script>
