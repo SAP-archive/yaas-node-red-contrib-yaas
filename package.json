@@ -42,7 +42,7 @@
     "request": "^2.65.0",
     "stripe": "^4.0.0",
     "underscore": "^1.8.3",
-    "yaas.js": "^0.1.2"
+    "yaas.js": "^0.1.6"
   },
   "devDependencies": {
     "jshint": "~2",
