@@ -1,7 +1,9 @@
+'use strict';
+
 module.exports = function(RED) {
 
     var uglycart = require('./lib/UGLYCART.js');
-    var YaaS = require("yaas.js");
+    var YaaS = require('yaas.js');
 
     var payment = require('./lib/payment.js');
 
@@ -14,16 +16,16 @@ module.exports = function(RED) {
 
         this.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
         this.stripeCredentials = RED.nodes.getNode(config.stripeCredentials);
-        this.tenant_id = this.yaasCredentials.application_id.split(".")[0];
+        this.tenant_id = this.yaasCredentials.application_id.split('.')[0];
 
         this.currency = config.currency;
         this.siteCode = config.siteCode;
 
-        this.status({fill:"yellow",shape:"dot",text:"idle"});
+        this.status({fill:'yellow',shape:'dot',text:'idle'});
 
         this.on('input', msg => {
             var email = this.yaasCustomerCredentials.email;
-            var inputEmail = "" + msg.payload;
+            var inputEmail = '' + msg.payload;
             if (inputEmail.indexOf('@') > 0) {
                 // the input seems to be an email (and not a twitter account)
                 email = inputEmail;
@@ -32,34 +34,40 @@ module.exports = function(RED) {
             var customer;
             var addresses;
 
-            yaas.init(this.yaasCredentials.client_id, this.yaasCredentials.client_secret, 'hybris.checkout_manage hybris.customer_read hybris.cart_manage', this.tenant_id)
+            yaas.init(this.yaasCredentials.client_id, 
+                this.yaasCredentials.client_secret, 
+                'hybris.checkout_manage hybris.customer_read hybris.cart_manage', 
+                this.tenant_id)
             .then(() => yaas.customer.getCustomers({q: 'contactEmail:"' + email + '"', expand: 'addresses'}))
             .then(response => {
                 customer = response.body[0];
                 customer.email = email; // TODO: uuh wow nice inconsistency here
 
                 addresses = [
-                    Object.assign({}, customer.addresses[0]),
-                    customer.addresses.length > 1 ? Object.assign({}, customer.addresses[1]) : Object.assign({}, customer.addresses[0])
+                    Object.assign({}, 
+                        customer.addresses[0]),
+                        customer.addresses.length > 1 ? 
+                            Object.assign({}, customer.addresses[1]) : 
+                            Object.assign({}, customer.addresses[0])
                 ];
                 delete customer.addresses;
 
-                addresses[0].type = "BILLING";
-                addresses[1].type = "SHIPPING";
+                addresses[0].type = 'BILLING';
+                addresses[1].type = 'SHIPPING';
 
-                this.status({fill:"yellow", shape:"dot", text: "got customer with id " + customer.customerNumber});
+                this.status({fill:'yellow', shape:'dot', text: 'got customer with id ' + customer.customerNumber});
                 return uglycart.getCartByCustomerId(yaas, customer.customerNumber, this.siteCode, this.currency);
             })
             .then(cart => {
                 cartId = cart.cartId;
-                this.status({fill:"yellow", shape:"dot", text: "got cart id " + cartId});
+                this.status({fill:'yellow', shape:'dot', text: 'got cart id ' + cartId});
                 return payment.getToken(this.stripeCredentials);
             })
             .then(stripeToken => {
-                this.status({fill:"yellow", shape:"dot", text: "got stripe token " + stripeToken});
+                this.status({fill:'yellow', shape:'dot', text: 'got stripe token ' + stripeToken});
                 var obj = {
                     payment : {
-                        paymentId : "stripe",
+                        paymentId : 'stripe',
                         customAttributes : {
                             token : stripeToken
                         }
@@ -74,12 +82,12 @@ module.exports = function(RED) {
             })
             .then(response => {
                 this.send({payload : response.body.orderId});
-                this.status({fill:"green", shape:"dot", text: "order created: " + response.body.orderId});
+                this.status({fill:'green', shape:'dot', text: 'order created: ' + response.body.orderId});
             })
             .catch(error => {
-                console.log("error");
+                console.log('error');
                 error = error.body ? error.body.details[0].message : error;
-                this.status({fill:"red", shape:"dot", text: "error: " + error});
+                this.status({fill:'red', shape:'dot', text: 'error: ' + error});
                 console.error(error);
             });
         });

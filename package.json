@@ -36,7 +36,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "test": "node_modules/.bin/mocha",
-    "lint": "jshint"
+    "lint": "jshint --config .jshintrc *.js"
   },
   "dependencies": {
     "request": "^2.65.0",

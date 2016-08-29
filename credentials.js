@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function(RED) {
     function YaasCredentialsNode(n) {
         RED.nodes.createNode(this,n);
@@ -27,15 +29,15 @@ module.exports = function(RED) {
         }
     }
     
-    RED.nodes.registerType("yaas-credentials",YaasCredentialsNode,{
+    RED.nodes.registerType('yaas-credentials',YaasCredentialsNode,{
         credentials: {
-            client_secret: {type: "password"}
+            client_secret: {type: 'password'}
         }
     }); 
 
-    RED.nodes.registerType("yaas-customer-credentials",YaasCustomerCredentialsNode,{
+    RED.nodes.registerType('yaas-customer-credentials',YaasCustomerCredentialsNode,{
         credentials: {
-            password: {type: "password"}
+            password: {type: 'password'}
         }
     }); 
 };

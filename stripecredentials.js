@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function(RED) {
     function StripeCredentialsNode(n) {
         RED.nodes.createNode(this,n);
@@ -13,9 +15,9 @@ module.exports = function(RED) {
         }
     }
 
-    RED.nodes.registerType("stripe-credentials",StripeCredentialsNode,{
+    RED.nodes.registerType('stripe-credentials',StripeCredentialsNode,{
         credentials: {
-            credit_card_number: {type: "password"}
+            credit_card_number: {type: 'password'}
         }
     }); 
 };

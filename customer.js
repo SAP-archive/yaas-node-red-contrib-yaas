@@ -1,6 +1,8 @@
+'use strict';
+
 module.exports = function(RED) {
 
-    var YaaS = require("yaas.js");
+    var YaaS = require('yaas.js');
 
 
     function missesRequirements(obj, req){
@@ -19,31 +21,31 @@ module.exports = function(RED) {
         this.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
         this.tenant_id = config.tenantId;
 
-        this.status({fill: "yellow", shape: "ring", text: "idle"});
+        this.status({fill: 'yellow', shape: 'ring', text: 'idle'});
 
         var yaas = new YaaS();
         yaas.init(this.yaasCredentials.client_id, this.yaasCredentials.client_secret, '', this.tenant_id)
         .then(() => {
-          this.status({fill: "yellow", shape: "dot", text: "Token received"});
-          this.on("input", msg => {
-            var missingRequirements = missesRequirements(msg.payload, ["email", "password"]);
+          this.status({fill: 'yellow', shape: 'dot', text: 'Token received'});
+          this.on('input', msg => {
+            var missingRequirements = missesRequirements(msg.payload, ['email', 'password']);
             if(missingRequirements){
-              this.error("Missing required fields: " + JSON.stringify(missingRequirements));
-              this.status({fill: "red", shape: "dot", text: "Missing fields (" +missingRequirements.length + ")"});
+              this.error('Missing required fields: ' + JSON.stringify(missingRequirements));
+              this.status({fill: 'red', shape: 'dot', text: 'Missing fields (' +missingRequirements.length + ')'});
             }
             else if(msg.payload.password.length < 6) {
-              this.error("Password too short (at least 6 characters)");
-              this.status({fill: "red", shape: "dot", text: "Password too short"});
+              this.error('Password too short (at least 6 characters)');
+              this.status({fill: 'red', shape: 'dot', text: 'Password too short'});
             } else {
               yaas.customer.signup(msg.payload)
                 .then(response => {
-                  this.status({fill: "green", shape: "dot", text: "Signed up as: " + response.body.id});
+                  this.status({fill: 'green', shape: 'dot', text: 'Signed up as: ' + response.body.id});
                   msg.payload = response.body.id;
                   this.send(msg);
                 })
                 .catch(error => {
-                  this.status({fill: "red", shape: "dot", text: "error during signup"});
-                  this.error("error during singup");
+                  this.status({fill: 'red', shape: 'dot', text: 'error during signup'});
+                  this.error('error during singup');
                   console.error(JSON.stringify(error));
                 });
             }
@@ -51,7 +53,7 @@ module.exports = function(RED) {
         });
     }
 
-    RED.nodes.registerType("customer signup", YaasCustomerSignupNode);
+    RED.nodes.registerType('customer signup', YaasCustomerSignupNode);
 
     function YaasUpdateCustomerNode(config) {
         RED.nodes.createNode(this, config);
@@ -59,31 +61,31 @@ module.exports = function(RED) {
         this.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
         this.tenant_id = config.tenantId;
 
-        this.status({fill: "yellow", shape: "ring", text: "idle"});
+        this.status({fill: 'yellow', shape: 'ring', text: 'idle'});
 
         var yaas = new YaaS();
         yaas.init(this.yaasCredentials.client_id, this.yaasCredentials.client_secret,
             'hybris.customer_update', this.tenant_id)
         .then(() => {
-          this.status({fill: "yellow", shape: "dot", text: "Token received"});
-          this.on("input", msg => {
-            var missingRequirements = missesRequirements(msg.payload, ["firstName", "lastName"]);
+          this.status({fill: 'yellow', shape: 'dot', text: 'Token received'});
+          this.on('input', msg => {
+            var missingRequirements = missesRequirements(msg.payload, ['firstName', 'lastName']);
             if(missingRequirements){
-              this.error("Missing required fields: " + JSON.stringify(missingRequirements));
-              this.status({fill: "red", shape: "dot", text: "Missing fields (" +missingRequirements.length + ")"});
+              this.error('Missing required fields: ' + JSON.stringify(missingRequirements));
+              this.status({fill: 'red', shape: 'dot', text: 'Missing fields (' +missingRequirements.length + ')'});
             }else {
-              msg.payload.preferredSite = msg.payload.preferredSite || "main";
+              msg.payload.preferredSite = msg.payload.preferredSite || 'main';
               var customerNumber = msg.payload.customerNumber;
               delete msg.payload.customerNumber;
               yaas.customer.updateCustomer(customerNumber, msg.payload)
                 .then(response => {
-                  this.status({fill: "green", shape: "dot", text: "Customer " + customerNumber + " updated"});
+                  this.status({fill: 'green', shape: 'dot', text: 'Customer ' + customerNumber + ' updated'});
                   msg.payload = customerNumber;
                   this.send(msg);
                 })
                 .catch(error => {
-                  this.error("error during customer update");
-                  this.status({fill: "red", shape: "dot", text: "error during customer update"});
+                  this.error('error during customer update');
+                  this.status({fill: 'red', shape: 'dot', text: 'error during customer update'});
                   console.error(JSON.stringify(error));
                 });
             }
@@ -91,7 +93,7 @@ module.exports = function(RED) {
         });
     }
 
-    RED.nodes.registerType("update customer", YaasUpdateCustomerNode);
+    RED.nodes.registerType('update customer', YaasUpdateCustomerNode);
     
     function YaasCustomerAddressNode(config) {
         RED.nodes.createNode(this, config);
@@ -99,29 +101,34 @@ module.exports = function(RED) {
         this.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
         this.tenant_id = config.tenantId;
 
-        this.status({fill: "yellow", shape: "ring", text: "idle"});
+        this.status({fill: 'yellow', shape: 'ring', text: 'idle'});
 
         var yaas = new YaaS();
-        yaas.init(this.yaasCredentials.client_id, this.yaasCredentials.client_secret, 'hybris.customer_update', this.tenant_id)
+        yaas.init(this.yaasCredentials.client_id, 
+          this.yaasCredentials.client_secret, 
+          'hybris.customer_update', 
+          this.tenant_id)
         .then(() => {
-          this.status({fill: "yellow", shape: "dot", text: "Token received"});
-          this.on("input", msg => {
-            var missingRequirements = missesRequirements(msg.payload, ["street", "streetNumber", "zipCode", "city", "country"]);
+          this.status({fill: 'yellow', shape: 'dot', text: 'Token received'});
+          this.on('input', msg => {
+            var missingRequirements = missesRequirements(msg.payload, 
+              ['street', 'streetNumber', 'zipCode', 'city', 'country']);
             if(missingRequirements){
-              this.error("Missing required fields: " + JSON.stringify(missingRequirements));
-              this.status({fill: "red", shape: "dot", text: "Missing fields (" +missingRequirements.length + ")"});
+              this.error('Missing required fields: ' + JSON.stringify(missingRequirements));
+              this.status({fill: 'red', shape: 'dot', text: 'Missing fields (' +missingRequirements.length + ')'});
             } else {
               var customerNumber = msg.payload.customerNumber;
               delete msg.payload.customerNumber;
               yaas.customer.createCustomerAddress(customerNumber, msg.payload)
                 .then(response => {
-                  this.status({fill: "green", shape: "dot", text: "New address for customer " + customerNumber + " created"});
+                  var statusText = 'New address for customer ' + customerNumber + ' created';
+                  this.status({fill: 'green', shape: 'dot', text: statusText});
                   msg.payload = customerNumber;
                   this.send(msg);
                 })
                 .catch(error => {
-                  this.error("error during customer address creation");
-                  this.status({fill: "red", shape: "dot", text: "error during customer address creation"});
+                  this.error('error during customer address creation');
+                  this.status({fill: 'red', shape: 'dot', text: 'error during customer address creation'});
                   console.error(JSON.stringify(error));
                 });
             }
@@ -129,5 +136,5 @@ module.exports = function(RED) {
         });
     }
 
-    RED.nodes.registerType("customer address", YaasCustomerAddressNode);
+    RED.nodes.registerType('customer address', YaasCustomerAddressNode);
 };

@@ -1,6 +1,8 @@
+'use strict';
+
 module.exports = function(RED) {
 
-    var YaaS = require("yaas.js");
+    var YaaS = require('yaas.js');
 
     function YaasDocumentWriteNode(config) {
         RED.nodes.createNode(this, config);
@@ -10,7 +12,7 @@ module.exports = function(RED) {
         node.tenant_id = config.tenantId;
         node.document_type = config.documentType;
 
-        node.status({fill: "red", shape: "ring", text: "disconnected"});
+        node.status({fill: 'red', shape: 'ring', text: 'disconnected'});
 
         var yaas = new YaaS();
         yaas.init(node.yaasCredentials.client_id,
@@ -18,12 +20,12 @@ module.exports = function(RED) {
             'hybris.document_manage',
             node.tenant_id)
         .then(function() {
-          node.status({fill: "green", shape: "dot", text: "connected"});
-          node.on("input",function(msg) {
+          node.status({fill: 'green', shape: 'dot', text: 'connected'});
+          node.on('input',function(msg) {
             node.log('Writing: ' + msg.payload);
             yaas.document.write(node.yaasCredentials.application_id, node.document_type, msg.payload)
             .then(function() {
-              node.log("Message published.");
+              node.log('Message published.');
             }, console.log);
           });
         });
@@ -31,5 +33,5 @@ module.exports = function(RED) {
         node.on('close', function() {});
     }
 
-    RED.nodes.registerType("write", YaasDocumentWriteNode);
+    RED.nodes.registerType('write', YaasDocumentWriteNode);
 };
