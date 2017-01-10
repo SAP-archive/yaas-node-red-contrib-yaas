@@ -19,17 +19,19 @@ module.exports = function(RED) {
         this.tenant_id = this.yaasCredentials.application_id.split('.')[0];
         this.on('input', msg => {
 
-            // TODO : DE-HACK
             var storedCustomer = this.context().flow.get('storedCustomer');
             this.yaasCustomerCredentials = storedCustomer || this.yaasCustomerCredentials;
-
-            var productdetails = (msg.payload.constructor === Array) ? msg.payload[0] : msg.payload;
-            var product = productdetails.product;
+            var product = (msg.payload.body.constructor === Array) ? msg.payload.body[0] : msg.payload.body;
             product.images = product.media;
-            var price = productdetails.prices[0];
-            var quantity = Math.round(config.quantity);
 
-            this.status({fill:'yellow', shape:'dot', text: 'adding ' +quantity + 'x ' + product.name + ' to cart'});
+            // FIXME find correct language values
+            product.name = product.name.en;
+            product.description = product.description.en;
+
+            var quantity = Math.round(config.quantity);
+            var productname = product.name.en || 'item';
+
+            this.status({fill:'yellow', shape:'dot', text: 'adding ' +quantity + 'x ' + productname + ' to cart'});
 
             yaas.init(this.yaasCredentials.client_id, 
               this.yaasCredentials.client_secret, 
@@ -39,13 +41,21 @@ module.exports = function(RED) {
               this.yaasCustomerCredentials.email, 
               config.siteCode, 
               config.currency))
-            .then(response => yaas.cart.addProduct(response.cartId, product, quantity, price))
+            .then(response => {
+              this.cartId = response.cartId;
+              return yaas.price.getPricesForProducts([product.id], 'USD')
+            })
+            .then(p_response => {
+              product.price = p_response.body[0];
+              return yaas.cart.addProduct(this.cartId, product, quantity, product.price)
+            })
             .then(cart => {
                 this.send({payload:cart.body});
-                this.status({fill:'green',shape:'dot',text:quantity + 'x ' + product.name + ' added'});  
+                this.status({fill:'green',shape:'dot',text:quantity + 'x ' + productname+ ' added'});  
             })
             .catch(e => {
                 console.error('addToCart', e);
+                if (e.body && e.body.details) console.log('...', e.body.details[0]);
                 this.error('error in addToCart');
                 this.status({fill:'red',shape:'dot', text: 'error in addToCart'});
             });
