@@ -20,6 +20,8 @@ describe('Stripe', function () {
   describe('token create', function () {
     it('should have an id with tok_', function (done) {
 
+      this.timeout(5000);
+
       stripe.tokens.create(TEST_DATA, function (err, token) {
         token.should.have.property('id').and.containEql('tok_');
         //console.log('\tSTRIPE TOKEN:', token.id);
