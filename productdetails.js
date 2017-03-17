@@ -3,7 +3,7 @@
 module.exports = function(RED) {
 
     var YaaS = require('yaas.js');
-   
+
     function YaasProductDetailsByIDNode(config) {
         RED.nodes.createNode(this, config);
         var node = this;
@@ -26,7 +26,8 @@ module.exports = function(RED) {
                 return yaas.product.getProduct(msg.payload);
             })
             .then(function(result){
-                node.send({payload:result});
+                msg.payload = result
+                node.send(msg);
                 node.status({fill:'yellow',shape:'dot',text:result.body.name.en || 'found'});
             })
             .catch( function(e) {
@@ -41,7 +42,7 @@ module.exports = function(RED) {
         var node = this;
 
         node.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
-        
+
         node.on('input',function(msg) {
 
             var yaas = new YaaS();
