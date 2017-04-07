@@ -1,0 +1,68 @@
+<script type="text/javascript">
+    RED.nodes.registerType('readorderstatus',{
+        category: 'yaas',
+        color: '#1b91e2',
+        defaults: {
+            yaasCredentials: {type:"yaas-credentials", required:true}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "yaas.png",
+        paletteLabel: 'orderstatus',
+        label: function() {
+            return 'orderstatus';
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="readorderstatus">
+    <div class="form-row">
+        <label for="node-input-yaasCredentials"><i class="fa fa-user-secret"></i> Credentials</label>
+        <input type="text" id="node-input-yaasCredentials">
+    </div>
+</script>
+<script type="text/x-red" data-help-name="readorderstatus">
+    <p>
+        Read the order status from <code>orderId<code> in or of <code>msg.payload</code>.
+    </p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('changeorderstatus',{
+        category: 'yaas',
+        color: '#1b91e2',
+        defaults: {
+            yaasCredentials: {type:"yaas-credentials", required:true}
+        },
+        inputs: 1,
+        outputs: 0,
+        icon: "yaas.png",
+        paletteLabel: 'orderstatus',
+        label: function() {
+            return 'orderstatus';
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="changeorderstatus">
+    <div class="form-row">
+        <label for="node-input-yaasCredentials"><i class="fa fa-user-secret"></i> Credentials</label>
+        <input type="text" id="node-input-yaasCredentials">
+    </div>
+</script>
+<script type="text/x-red" data-help-name="changeorderstatus">
+    <p>
+        <code>orderId</code> in <code>msg.payload</code>.
+    </p>
+    <p>
+        <code>status</code> in <code>msg.payload</code>.        
+        Every order at any point in time has one of the following statuses:
+        <ul>
+            <li>CREATED: New order</li>
+            <li>CONFIRMED: Seller confirmed the order</li>
+            <li>DECLINED: Seller declined the order</li>
+            <li>COMPLETED: Order has been successfully fulfilled</li>
+            <li>SHIPPED: Order goods have been successfully shipped</li>
+        </ul>
+    </p>
+</script>

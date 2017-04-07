@@ -21,6 +21,7 @@
       "credentials": "credentials.js",
       "customer": "customer.js",
       "document": "document.js",
+      "order": "orderstatus.js",
       "productdetails": "productdetails.js",
       "pubsub": "pubsub.js",
       "recommender": "recommender.js",
