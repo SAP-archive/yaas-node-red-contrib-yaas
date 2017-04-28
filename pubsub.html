@@ -6,7 +6,7 @@
             name: {value:""},
             yaasCredentials: {type:"yaas-credentials", required:true},
             event_type : {value:"order.order-created", required:true},
-            interval : {value:1000},
+            interval : {value: 5000},
             number_of_events: {value:1},
             topic_owner_client : {value:"hybris"},
             auto_commit : {value:true, required:true}
@@ -65,6 +65,9 @@
     </p>
     <p>
        See also <a href="https://devportal.yaas.io/services/pubsub/latest/index.html" target="_blank">PubSub documentation</a>.
+    </p>
+    <p>
+       For order events see also <a href="https://devportal.yaas.io/services/beta/order/latest/#Events">Order documentation</a>.
     </p>
 </script>
 
