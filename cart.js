@@ -21,15 +21,24 @@ module.exports = function(RED) {
 
             var storedCustomer = this.context().flow.get('storedCustomer');
             this.yaasCustomerCredentials = storedCustomer || this.yaasCustomerCredentials;
+            if (!msg.payload.body) {
+                this.error('error in addToCart: no body object in msg.payload');
+                this.status({fill:'red',shape:'dot', text: 'no body object in payload'});
+                return;
+            }
             var product = (msg.payload.body.constructor === Array) ? msg.payload.body[0] : msg.payload.body;
             product.images = product.media;
 
             // FIXME find correct language values
-            product.name = product.name.en;
-            product.description = product.description.en;
+            if (product.name.en) {
+                product.name = product.name.en;
+            }
+            if (product.description.en) {
+                product.description = product.description.en;
+            }
 
             var quantity = Math.round(config.quantity);
-            var productname = product.name.en || 'item';
+            var productname = product.name || 'item';
 
             this.status({fill:'yellow', shape:'dot', text: 'adding ' +quantity + 'x ' + productname + ' to cart'});
 
