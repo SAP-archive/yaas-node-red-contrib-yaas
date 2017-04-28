@@ -3,7 +3,7 @@
 module.exports = function(RED) {
 
     var YaaS = require('yaas.js');
-   
+
     function YaasProductDetailsByIDNode(config) {
         RED.nodes.createNode(this, config);
         var node = this;
@@ -26,12 +26,14 @@ module.exports = function(RED) {
                 return yaas.product.getProduct(msg.payload);
             })
             .then(function(result){
-                node.send({payload:result});
+                msg.payload = result
+                node.send(msg);
+
                 var name = result.body.name;
                 if (name && name.en) {
                     name = name.en;
                 }
-                node.status({fill:'yellow',shape:'dot',text:name || 'found'});
+                node.status({fill:'yellow',shape:'dot',text: name || 'found'});
             })
             .catch( function(e) {
                 console.error(e);
@@ -45,7 +47,7 @@ module.exports = function(RED) {
         var node = this;
 
         node.yaasCredentials = RED.nodes.getNode(config.yaasCredentials);
-        
+
         node.on('input',function(msg) {
 
             var yaas = new YaaS();
