@@ -27,7 +27,11 @@ module.exports = function(RED) {
             })
             .then(function(result){
                 node.send({payload:result});
-                node.status({fill:'yellow',shape:'dot',text:result.body.name.en || 'found'});
+                var name = result.body.name;
+                if (name && name.en) {
+                    name = name.en;
+                }
+                node.status({fill:'yellow',shape:'dot',text:name || 'found'});
             })
             .catch( function(e) {
                 console.error(e);
