@@ -23,7 +23,7 @@
 </script>
 <script type="text/x-red" data-help-name="readorderstatus">
     <p>
-        Read the order status from <code>orderId<code> in or of <code>msg.payload</code>.
+        Read the order status from <code>orderId</code> in or of <code>msg.payload</code>.
     </p>
 </script>
 
@@ -52,11 +52,10 @@
 </script>
 <script type="text/x-red" data-help-name="changeorderstatus">
     <p>
-        <code>orderId</code> in <code>msg.payload</code>.
+        <code>orderId</code> and <code>status</code> in the <code>msg.payload</code> object.
     </p>
     <p>
-        <code>status</code> in <code>msg.payload</code>.        
-        Every order at any point in time has one of the following statuses:
+        Every order at any point in time has one of the following statuses (as string):
         <ul>
             <li>CREATED: New order</li>
             <li>CONFIRMED: Seller confirmed the order</li>

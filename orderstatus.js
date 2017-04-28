@@ -25,10 +25,10 @@ module.exports = function (RED) {
                     var orderId = msg.payload.orderId || msg.payload.orderid || msg.payload;
                     yaas.order.getSalesorderDetails(orderId)
                         .then(result => {
-                            console.log('result:', result);
+                            //console.log('result:', result);
                             var status = result.body.status;
                             node.status({ fill: 'green', shape: 'dot', text: orderId + ' ' + status });
-                            node.send({ payload: result.body.status });
+                            node.send({ payload: result.body.status, body: result.body });
                         }).catch(error => {
                             _error(node, error);
                         });
@@ -60,7 +60,7 @@ module.exports = function (RED) {
                     var status = msg.payload.status;
                     yaas.order.transitionSalesorder(orderId, status)
                         .then(result => {
-                            console.log('result:', result);
+                            //console.log('result:', result);
                             node.status({ fill: 'green', shape: 'dot', text: orderId + ' ' + status });
                             node.send({ payload: result.body });
                         }).catch(error => {
