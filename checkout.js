@@ -5,8 +5,6 @@ module.exports = function(RED) {
     var uglycart = require('./lib/UGLYCART.js');
     var YaaS = require('yaas.js');
 
-    var payment = require('./lib/payment.js');
-
     function YaasCheckoutNode(config) {
         RED.nodes.createNode(this, config);
 
@@ -30,7 +28,6 @@ module.exports = function(RED) {
                 // the input seems to be an email (and not a twitter account)
                 email = inputEmail;
             }
-            var cartId;
             var customer;
             var addresses;
 
@@ -59,20 +56,18 @@ module.exports = function(RED) {
                 return uglycart.getCartByCustomerId(yaas, customer.customerNumber, this.siteCode, this.currency);
             })
             .then(cart => {
-                cartId = cart.cartId;
-                this.status({fill:'yellow', shape:'dot', text: 'got cart id ' + cartId});
-                return payment.getToken(this.stripeCredentials);
-            })
-            .then(stripeToken => {
-                this.status({fill:'yellow', shape:'dot', text: 'got stripe token ' + stripeToken});
+                this.status({fill:'yellow', shape:'dot', text: 'got cart id ' + cart.cartId});
                 var obj = {
-                    payment : {
-                        paymentId : 'stripe',
-                        customAttributes : {
-                            token : stripeToken
-                        }
-                    },
-                    cartId : cartId,
+                        paymentMethods: [{
+                            provider: 'stripe',
+                            method: 'invoice',
+                            paymentMethodYrn: 'urn:yaas:hybris:payments:payment-method:' + this.tenant_id + ';invoice',
+                            customAttributes:
+                            {
+                                token: ""
+                            }
+                        }],
+                    cartId : cart.cartId,
                     customer : customer,
                     addresses : addresses,
                     currency : this.currency,

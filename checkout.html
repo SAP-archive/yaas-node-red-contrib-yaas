@@ -5,7 +5,6 @@
         defaults: {
             yaasCustomerCredentials: {type:"yaas-customer-credentials", required:true},
             yaasCredentials: {type:"yaas-credentials", required:true},
-            stripeCredentials : {type:"stripe-credentials", required:true},
             siteCode : {value:"main", required:true},
             currency : {value:"USD", required:true}
         },
@@ -29,10 +28,6 @@
         <input type="text" id="node-input-yaasCredentials">
     </div>
     <div class="form-row">
-        <label for="node-input-stripeCredentials"><i class="fa fa-user-secret"></i> Stripe Credentials</label>
-        <input type="text" id="node-input-stripeCredentials">
-    </div>    
-    <div class="form-row">
         <label for="node-input-siteCode"><i class="fa fa-globe"></i> Site code</label>
         <input type="text" id="node-input-siteCode">
     </div>
@@ -43,7 +38,7 @@
 </script>
 <script type="text/x-red" data-help-name="checkout">
     <p>
-        The Checkout node checks out a shopping cart, of a defined Customer. Therefore the Customer, YaaS and Stripe Credentials have to be defined for this node.
+        The Checkout node checks out a shopping cart, of a defined Customer. Therefore the Customer and YaaS Credentials have to be defined for this node.
     <p>
         It is also possible to send the Customer Id (email address) as input (<code>msg.payload</code>). In this case the defined Customer will be ignored.
     </p>
